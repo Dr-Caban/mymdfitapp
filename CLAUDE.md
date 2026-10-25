@@ -27,6 +27,46 @@
 | 7 | **Billing** | Subscriptions, purchases, entitlements |
 | 8 | **Admin CMS** | Content management |
 | 9 | **Video Review** | Paid upload/review workflow (post-beta) |
+| 10 | **Events/Calendar** | Group classes, workshops, in-person sessions → user calendars |
+| 11 | **Management Portal** | Admin dashboard for Dr. Jared (see below) |
+
+---
+
+## Management Portal (Admin)
+
+Web-based admin for Dr. Jared to run the business:
+
+### Events & Calendar
+- Create events (group classes, workshops, mobility sessions, in-person)
+- Set capacity, pricing, location (clinic or virtual)
+- Recurring events (weekly mobility class, etc.)
+- Events sync to enrolled users' iOS Calendar via EventKit
+- Push notifications for upcoming events
+- Waitlist management
+
+### Content Management
+- Upload/manage exercise videos
+- Create/edit programs (weeks, days, exercises)
+- Manage Pain Tool mappings (region → exercises)
+- Approve/reject video review submissions
+
+### User Management
+- View all users, subscriptions, entitlements
+- Grant/revoke access
+- View progress, completion rates
+- Send announcements/notifications
+
+### Billing & Analytics
+- Revenue dashboard
+- Subscription metrics (MRR, churn)
+- Active users, video views, workout completions
+- Program enrollment stats
+
+### Ticketing (Future - Lightning Pass style)
+- Create ticketed events (seminars, workshops)
+- QR code check-in
+- Capacity management
+- Payment processing
 
 ---
 
@@ -48,9 +88,15 @@
 - Abs
 - Core Specifics
 
+**Calendar Integration:**
+- Calendar view alongside generator
+- Tap date → schedule generated workout
+- See existing workouts, events, programs on calendar
+- Syncs to iOS Calendar via EventKit
+
 **Output:** Workout Summary with exercise list, sets, reps, rest times
 
-**Actions:** Generate Workout, Randomize Settings
+**Actions:** Generate Workout, Randomize Settings, Schedule to Calendar
 
 ---
 
