@@ -1,80 +1,239 @@
-# MD Fit SRQ — Claude Code Context
+# MD Fit Online — Claude Code Context
 
 ## Identity & Business
 
-**MD Fit SRQ** — Physical rehabilitation & fitness practice in Sarasota, FL. Muscle-focused therapy that traces pain to its root cause.
+**MD Fit Online** — Movement-education platform connecting Dr. Jared Caban's Sarasota clinical practice to an online video library, pain-pattern tool, workout generator, structured training programs, and personalized dashboard.
 
 - **Owner**: Dr. Jared Caban
 - **Location**: 3214 Clark Road, Sarasota, FL 34231
 - **Phone**: 941.313.0562
-- **Hours**: Mon–Fri 9 AM – 5 PM
 - **Website**: mdfitsrq.com
-- **Booking**: ClientSecure (jared-caban.clientsecure.me)
+- **Current Stack**: WordPress (audit before reuse)
 
-### Core Philosophy
-> "Pain Has Haunted You Long Enough"
-> Fix the muscle → restore the movement → remove the pain
+> **NOT a diagnostic service** — educational content only.
 
-Not a gym. Not surface-level treatment. Specialized physiotherapy addressing tension, trauma, movement patterns, and years of compensation.
+---
 
-### Services
-- Physical Rehabilitation
-- Functional Mobility
-- Active Release & Soft Tissue Manipulation
-- Neck & Shoulder Pain
-- Lower Back Pain
-- Knee & Leg Issues
-- Sports Injury Recovery
-- Post-Surgical Rehabilitation
-- Mobility & Flexibility Restoration
+## Core Platform Modules
+
+| # | Module | Description |
+|---|--------|-------------|
+| 1 | **Pain Tool** | Free visual body-region/referred-pain selector → approved exercise videos |
+| 2 | **Video Library** | Searchable tagged library, limited free daily views, unlimited premium |
+| 3 | **Workout Generator** | Rule-based random workout builder (see screenshot) |
+| 4 | **Custom Workouts** | Build-your-own workouts |
+| 5 | **Programs** | Purchasable + membership-included structured training |
+| 6 | **Dashboard** | Next workout, progress, resume state |
+| 7 | **Billing** | Subscriptions, purchases, entitlements |
+| 8 | **Admin CMS** | Content management |
+| 9 | **Video Review** | Paid upload/review workflow (post-beta) |
+
+---
+
+## Workout Generator (from screenshot)
+
+**Inputs:**
+- **Goal/Type**: Upper Body, Lower Body, Full Body, Cardio, Foundational
+- **Location**: Home, Outdoor, Gym, Minimal, Hotel, Office
+- **Difficulty**: Beginner, Intermediate, Advanced, Elite
+- **Length**: 15-60 min slider
+- **Exercises per Round**: 2, 4, 6, 8, 10, 12
+- **Rounds**: 1, 2, 3, 4, 5
+- **Rest Between Exercises**: slider
+- **Rest Between Rounds**: slider
+
+**Optional Add-ons:**
+- Warm-up
+- Cool Down
+- Abs
+- Core Specifics
+
+**Output:** Workout Summary with exercise list, sets, reps, rest times
+
+**Actions:** Generate Workout, Randomize Settings
+
+---
+
+## Shared Movement Engine — Data Model
+
+```swift
+// Core entities from spec
+Exercise
+VideoAsset
+BodyRegion
+PainPattern
+ExerciseTag
+Program
+ProgramWeek
+ProgramDay
+Workout
+WorkoutExercise      // prescription lives here, not on Exercise
+Enrollment
+Completion
+User
+Entitlement
+Purchase
+ReviewSubmission
+```
+
+### Video Metadata
+- Exercise name
+- Permanent ID
+- Video filename/URL (naming: `REGION_CATEGORY_MOVEMENT_SUBTYPE.mp4`)
+- Body region
+- Muscle emphasis
+- Category
+- Equipment
+- Level
+- Cues
+- Tempo
+- Default prescription
+- Modifications
+- Exclusions
+- Safety notes
+- Program associations
+- Approval status
+
+### Prescription Model
+Support on `WorkoutExercise` (not just Exercise):
+- Reps, Sets, Tempo
+- Duration, Distance
+- Intensity, Load
+- Coaching cues
+- Modification
+- Stop rules
+- Rest
+- Free-form activity days
+
+> Rehab: 3-10 slow pain-limited reps
+> Conditioning: sets of 20
+
+---
+
+## Pain Tool Flow
+
+```
+Front/Back body tap
+    ↓
+Select region (shoulder, lower back, knee, etc.)
+    ↓
+Show illustrated referred-pain patterns
+    ↓
+Display approved suggested movement videos
+    ↓
+Educational disclaimer + red-flag guidance + "See professional" option
+```
+
+**No medical diagnosis claims.**
+
+---
+
+## Programs & Training Inventory
+
+| Program | Details |
+|---------|---------|
+| **Golf** | Rotational power, cable swing, lateral med-ball release, Golfer Switch Row, reactive jump-lunge |
+| **Pickleball** | Sport movement, tied to 51-item filming checklist |
+| **Running** | Beginner + Advanced 8-week; mechanics: midfoot landing, glutes, trunk rotation, shoulders down, slight forward lean |
+| **Ski** | Beginner/Intermediate/Advanced concepts, 8-week advanced sequence, Mon/Wed/Fri prescriptions |
+| **Rehab** | Shoulder-release, plantar fascia, lower-back/SI |
+| **General** | Mobility, strength, weight-loss, HIIT |
+
+---
+
+## Business Model
+
+| Tier | Price | Access |
+|------|-------|--------|
+| **Free** | $0 | Pain tool + limited daily video views |
+| **Premium** | $20/mo (proposed) | Unlimited video + programs |
+| **90-Day Micro Momentum** | $9/mo × 3 | Intro offer |
+| **Beta Grandfathered** | $9.95/mo lifetime | After beta |
+| **Program Purchase** | varies | One-time program access |
+| **Video Review** | paid | Movement analysis submission |
+
+Support: coupons, lifetime price cohorts, subscriptions, cancellations, refunds, entitlements.
+
+---
+
+## Beta Launch
+
+- 50-100 controlled testers
+- Test: Pain tool, video playback, tagging/search, generator, custom workouts, account/login, program resume, payments/access, mobile responsive, bug submission, analytics
+- Establish test scripts + written acceptance criteria
+
+---
+
+## App Navigation (iOS)
+
+Based on screenshot sidebar:
+1. **Dashboard** — Home, next workout
+2. **My Programs** — Enrolled programs
+3. **Workout Generator** — Rule-based builder
+4. **Video Library** — Browse/search all videos
+5. **Pain Tool** — Body region selector
+6. **Progress Tracking** — Completions, stats
+7. **Resources** — Educational content
+8. **My Profile** — Account, settings, billing
 
 ---
 
 ## Brand Identity
 
-### Colors
+### Colors (from screenshot)
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--primary` | #FF7A00 | Orange accent, CTAs |
-| `--dark` | #1A1A2E | Dark blue/purple, backgrounds |
-| `--white` | #FFFFFF | Text on dark |
-| `--gray` | #8A8A8A | Secondary text |
+| `--primary` | #0066CC | Blue headers, buttons |
+| `--accent` | #FF7A00 | Orange CTAs |
+| `--dark` | #1A1A2E | Dark backgrounds |
+| `--white` | #FFFFFF | Text, cards |
+| `--gold` | #D4AF37 | Premium/featured |
 
-### Typography
-- Clean, medical-professional aesthetic
-- Sans-serif primary (SF Pro for iOS)
+### Logo
+"MD Fit." with blue gradient, period included
 
 ---
 
-## App Architecture (iOS First)
+## Security & Portability
 
-### Platform Strategy
-**iOS (Swift/SwiftUI)** → then Android (Kotlin) or cross-platform
+- Company-owned: Git repo, domain, hosting, database, video accounts, payments, app-store accounts, API keys
+- Separate staging/production
+- Role-based permissions
+- Backups + restore testing
+- Access logs, encryption
+- Minimal sensitive data
+- Privacy/HIPAA applicability review
+- Documented API and deployment
+- **Do NOT hardwire logic into WordPress templates**
 
-iOS-native gives us:
-- Apple Health integration (HealthKit)
-- Apple Pay (no Stripe complexity)
-- Face ID / Touch ID authentication
-- Push notifications (APNs)
-- App Store distribution
-- Privacy by design
+---
 
-### Core Features (MVP)
-1. **Booking** — Schedule appointments with Dr. Jared
-2. **Progress Tracking** — Pain levels, mobility assessments, session notes
-3. **Exercise Library** — Prescribed movements with video demos
-4. **Messaging** — Secure communication with practitioner
-5. **Payments** — Apple Pay for sessions/packages
+## Delivery Sequence
 
-### Data Model
-```swift
-// Core entities
-User — patient profile, health data consent
-Appointment — date, time, type, status, notes
-Exercise — name, video URL, instructions, category
-ProgressEntry — date, pain level, mobility score, notes
-Message — sender, content, timestamp, read status
-```
+1. Audit current code and assets
+2. Agree schema/taxonomy
+3. Implement auth, video library, Pain Tool
+4. Complete generator + custom workouts
+5. Structured programs + dashboard
+6. Subscriptions + admin
+7. Controlled beta + bug fixes
+8. Paid movement analysis + advanced onboarding (post-beta)
+9. Native iOS/Android when web stable
+
+---
+
+## Unresolved Questions (from spec)
+
+- [ ] What is actually built and functional?
+- [ ] Where do all source code and assets reside?
+- [ ] Final 51-video checklist and full exercise inventory?
+- [ ] Exact master golf/pickleball/running/ski program files?
+- [ ] Current approved prices?
+- [ ] Video hosting costs?
+- [ ] Patient-data boundaries?
+- [ ] Target iOS/Android distribution timeline?
+- [ ] Owner of design files?
+- [ ] Acceptance and launch dates?
 
 ---
 
@@ -84,40 +243,17 @@ Message — sender, content, timestamp, read status
 MDfit/
 ├── CLAUDE.md           # This file
 ├── GOALS.md            # Session snapshots
-├── MDfit/              # iOS app (Xcode project)
-│   ├── MDfit.xcodeproj
-│   ├── MDfit/
-│   │   ├── App/
-│   │   │   ├── MDfitApp.swift
-│   │   │   └── ContentView.swift
-│   │   ├── Models/
-│   │   ├── Views/
-│   │   ├── ViewModels/
-│   │   ├── Services/
-│   │   └── Resources/
-│   └── MDfitTests/
-└── docs/               # Design specs, API docs
+├── MDfitApp/           # iOS app (Swift/SwiftUI)
+│   └── Sources/MDfit/
+│       ├── App/
+│       ├── Models/
+│       ├── Views/
+│       ├── ViewModels/
+│       ├── Services/
+│       └── Resources/
+├── web/                # Web app (if needed before native)
+└── docs/               # Specs, API docs
 ```
-
-### Architecture Pattern
-**MVVM** with SwiftUI
-- Models: Data structures
-- Views: SwiftUI views
-- ViewModels: ObservableObject classes
-- Services: API, HealthKit, Auth
-
----
-
-## Deploy Chain
-
-### iOS
-```
-Local Xcode → TestFlight → App Store Connect → App Store
-```
-
-### Backend (if needed)
-- Firebase or Supabase for auth + database
-- Or integrate directly with ClientSecure API if available
 
 ---
 
@@ -130,45 +266,21 @@ Local Xcode → TestFlight → App Store Connect → App Store
 
 ## Hard Rules
 
-1. **iOS-first** — Swift/SwiftUI, no React Native or Flutter
-2. **Apple Pay only** — no custom Stripe integration on iOS
-3. **HIPAA-aware** — health data requires proper consent flows
-4. **No PHI in logs** — never log patient health information
-5. **HealthKit opt-in** — always request permission, graceful fallback
-6. **Offline-capable** — core features work without network
-7. **Accessibility** — VoiceOver support, Dynamic Type
-8. **Dark mode** — support both light and dark appearances
-
----
-
-## Current Phase
-
-**Phase 0: Project Setup**
-- [ ] Create Xcode project
-- [ ] Configure bundle ID, signing
-- [ ] Set up basic navigation structure
-- [ ] Design system (colors, typography, components)
-
-**Phase 1: Core Booking**
-- [ ] Calendar view for available slots
-- [ ] Book/cancel appointments
-- [ ] Push notification reminders
-
-**Phase 2: Progress Tracking**
-- [ ] Pain level logging (1-10 scale)
-- [ ] Mobility assessments
-- [ ] Progress charts over time
-
-**Phase 3: Exercise Library**
-- [ ] Video player for exercises
-- [ ] Categorized exercise list
-- [ ] Prescribed routines
+1. **Educational only** — never claim medical diagnosis
+2. **iOS-first** — Swift/SwiftUI, no React Native
+3. **Apple Pay** — no custom Stripe on iOS
+4. **Prescription on WorkoutExercise** — not on Exercise record
+5. **Video naming** — `REGION_CATEGORY_MOVEMENT_SUBTYPE.mp4`
+6. **Stable IDs** — content versioning for exercises
+7. **No PHI in logs** — never log patient health info
+8. **Offline-capable** — core features work without network
+9. **Red-flag guidance** — Pain Tool shows when to seek professional help
+10. **Company-owned assets** — all repos, accounts, keys owned by MD Fit
 
 ---
 
 ## Reference
 
 - [MD Fit Website](https://mdfitsrq.com/)
-- [ClassPass Profile](https://classpass.com/studios/md-fit-sarasota)
-- [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/)
-- [HealthKit Documentation](https://developer.apple.com/documentation/healthkit)
+- Developer Handoff PDF (Oct 22, 2026)
+- Workout Generator Screenshot
