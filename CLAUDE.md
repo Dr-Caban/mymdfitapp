@@ -94,6 +94,13 @@ Web-based admin for Dr. Jared to run the business:
 - See existing workouts, events, programs on calendar
 - Syncs to iOS Calendar via EventKit
 
+**Push Notifications:**
+- Upcoming workout reminders (30 min, 1 hr before)
+- Event announcements from Dr. Jared
+- Appointment reminders
+- New program/content alerts
+- Streak maintenance nudges
+
 **Output:** Workout Summary with exercise list, sets, reps, rest times
 
 **Actions:** Generate Workout, Randomize Settings, Schedule to Calendar
