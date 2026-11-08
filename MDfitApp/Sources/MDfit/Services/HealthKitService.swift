@@ -32,8 +32,12 @@ final class HealthKitService: NSObject, ObservableObject {
 
     private let healthStore = HKHealthStore()
 
-    private var workoutSession: HKWorkoutSession?
-    private var workoutBuilder: HKLiveWorkoutBuilder?
+    // HKWorkoutSession / HKLiveWorkoutBuilder exist on iPhone only from iOS 26; stored untyped so the class
+    // still compiles for the iOS 17 deployment target. Use liveSession / liveBuilder behind #available.
+    private var workoutSession: Any?
+    private var workoutBuilder: Any?
+    @available(iOS 26.0, *) private var liveSession: HKWorkoutSession? { workoutSession as? HKWorkoutSession }
+    @available(iOS 26.0, *) private var liveBuilder: HKLiveWorkoutBuilder? { workoutBuilder as? HKLiveWorkoutBuilder }
     private var workoutStartDate: Date?
     private var workoutTimer: Timer?
     private var heartRateQuery: HKAnchoredObjectQuery?
@@ -363,18 +367,23 @@ final class HealthKitService: NSObject, ObservableObject {
         configuration.activityType = workoutType
         configuration.locationType = mapLocationToHealthKit(workout.location)
 
+        guard #available(iOS 26.0, *) else {
+            throw HealthKitError.workoutSessionFailed(NSError(domain: "MDfit.HealthKit", code: -1,
+                userInfo: [NSLocalizedDescriptionKey: "Live workout tracking on iPhone needs iOS 26 or newer."]))
+        }
         do {
-            workoutSession = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
-            workoutBuilder = workoutSession?.associatedWorkoutBuilder()
-
-            workoutBuilder?.dataSource = HKLiveWorkoutDataSource(
+            let session = try HKWorkoutSession(healthStore: healthStore, configuration: configuration)
+            let builder = session.associatedWorkoutBuilder()
+            builder.dataSource = HKLiveWorkoutDataSource(
                 healthStore: healthStore,
                 workoutConfiguration: configuration
             )
 
             let startDate = Date()
-            workoutSession?.startActivity(with: startDate)
-            try await workoutBuilder?.beginCollection(at: startDate)
+            session.startActivity(with: startDate)
+            try await builder.beginCollection(at: startDate)
+            workoutSession = session
+            workoutBuilder = builder
 
             workoutStartDate = startDate
             isWorkoutSessionActive = true
@@ -390,17 +399,17 @@ final class HealthKitService: NSObject, ObservableObject {
     }
 
     func pauseWorkoutSession() {
-        workoutSession?.pause()
+        if #available(iOS 26.0, *) { liveSession?.pause() }
         stopWorkoutTimer()
     }
 
     func resumeWorkoutSession() {
-        workoutSession?.resume()
+        if #available(iOS 26.0, *) { liveSession?.resume() }
         startWorkoutTimer()
     }
 
     func endWorkoutSession() async throws -> HKWorkout? {
-        guard let session = workoutSession, let builder = workoutBuilder else {
+        guard #available(iOS 26.0, *), let session = liveSession, let builder = liveBuilder else {
             throw HealthKitError.noActiveWorkout
         }
 
@@ -431,8 +440,10 @@ final class HealthKitService: NSObject, ObservableObject {
     }
 
     func discardWorkoutSession() {
-        workoutSession?.end()
-        workoutBuilder?.discardWorkout()
+        if #available(iOS 26.0, *) {
+            liveSession?.end()
+            liveBuilder?.discardWorkout()
+        }
 
         stopWorkoutTimer()
         stopHeartRateMonitoring()
@@ -566,6 +577,10 @@ final class HealthKitService: NSObject, ObservableObject {
             return .mixedCardio
         case .upperBody, .lowerBody, .fullBody:
             return .functionalStrengthTraining
+        case .core:
+            return .coreTraining
+        case .mobility:
+            return .flexibility
         }
     }
 
@@ -573,7 +588,7 @@ final class HealthKitService: NSObject, ObservableObject {
         switch location {
         case .outdoor, .pool:
             return .outdoor
-        case .home, .gym, .custom:
+        case .home, .gym, .office, .custom:
             return .indoor
         }
     }
@@ -599,6 +614,8 @@ final class HealthKitService: NSObject, ObservableObject {
             typeMultiplier = 1.1
         case .upperBody, .lowerBody:
             typeMultiplier = 1.0
+        case .core, .mobility:
+            typeMultiplier = 0.8
         }
 
         return Double(workout.lengthMinutes) * baseRate * typeMultiplier
@@ -636,12 +653,12 @@ final class HealthKitService: NSObject, ObservableObject {
             limit: HKObjectQueryNoLimit
         ) { [weak self] _, samples, _, _, error in
             guard error == nil, let samples = samples as? [HKQuantitySample] else { return }
-            self?.processHeartRateSamples(samples)
+            Task { @MainActor in self?.processHeartRateSamples(samples) }
         }
 
         heartRateQuery?.updateHandler = { [weak self] _, samples, _, _, error in
             guard error == nil, let samples = samples as? [HKQuantitySample] else { return }
-            self?.processHeartRateSamples(samples)
+            Task { @MainActor in self?.processHeartRateSamples(samples) }
         }
 
         if let query = heartRateQuery {

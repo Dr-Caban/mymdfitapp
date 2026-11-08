@@ -526,8 +526,8 @@ actor BackendService {
             return exercise.approvalStatus == .approved
         }
 
-        return try await hasEntitlement(userId: userId, type: .premium) ||
-               try await hasEntitlement(userId: userId, type: .unlimitedViews)
+        if try await hasEntitlement(userId: userId, type: .premium) { return true }
+        return try await hasEntitlement(userId: userId, type: .unlimitedViews)
     }
 
     /// Check if user can access program
@@ -741,6 +741,10 @@ extension BackendService {
             filtered = filtered.filter { $0.category == .cardio }
         case .environmental:
             filtered = filtered.filter { $0.tags.contains("outdoor") || $0.tags.contains("swim") || $0.tags.contains("run") }
+        case .core:
+            filtered = filtered.filter { $0.category == .stability || $0.category == .strengthening }
+        case .mobility:
+            filtered = filtered.filter { $0.category == .mobility || $0.category == .stretching }
         }
 
         return Array(filtered)

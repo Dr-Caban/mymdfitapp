@@ -531,7 +531,7 @@ struct PainMappingResponse: Decodable {
             suggestedExerciseIds: suggestedExerciseIds,
             educationalContent: educationalContent,
             disclaimer: disclaimer,
-            thumbnailUrl: thumbnailUrl,
+            thumbnailURL: thumbnailUrl,
             severity: PainSeverity(rawValue: severity) ?? .moderate,
             isActive: isActive
         )
@@ -742,18 +742,25 @@ struct EventResponse: Decodable {
             id: id,
             title: title,
             description: description,
-            eventType: EventType(rawValue: eventType) ?? .groupClass,
+            type: EventType(rawValue: eventType) ?? .groupClass,
             startDate: startDate,
             endDate: endDate,
-            location: location,
-            isVirtual: isVirtual,
-            virtualMeetingURL: virtualMeetingUrl,
+            location: EventLocation(
+                type: isVirtual ? .virtual : .inPerson,
+                name: location,
+                address: isVirtual ? nil : location,
+                virtualLink: virtualMeetingUrl,
+                notes: nil
+            ),
             capacity: capacity,
-            registeredCount: registeredCount,
+            enrolledCount: registeredCount,
             price: price,
             isRecurring: isRecurring,
-            recurrenceRule: recurrenceRule,
-            hostId: hostId,
+            recurrenceRule: nil,                 // the API sends an RRULE string; parsing it into RecurrenceRule is TODO
+            requiresRegistration: true,
+            registrationDeadline: nil,
+            imageURL: nil,
+            createdBy: hostId,
             createdAt: createdAt,
             updatedAt: updatedAt
         )

@@ -112,13 +112,13 @@ final class HapticManager: ObservableObject {
         #if canImport(UIKit)
         switch haptic {
         case .buttonTap:
-            impactLight.impactOccurred(intensity: hapticIntensity * 0.6)
+            impactLight.impactOccurred(intensity: CGFloat(hapticIntensity * 0.6))
         case .toggle:
-            impactMedium.impactOccurred(intensity: hapticIntensity * 0.7)
+            impactMedium.impactOccurred(intensity: CGFloat(hapticIntensity * 0.7))
         case .selection:
             selectionFeedback.selectionChanged()
         case .impact:
-            impactMedium.impactOccurred(intensity: hapticIntensity)
+            impactMedium.impactOccurred(intensity: CGFloat(hapticIntensity))
 
         case .success:
             notificationFeedback.notificationOccurred(.success)
@@ -132,15 +132,15 @@ final class HapticManager: ObservableObject {
         case .exerciseComplete:
             playExerciseCompletePattern()
         case .restStart:
-            impactSoft.impactOccurred(intensity: hapticIntensity * 0.5)
+            impactSoft.impactOccurred(intensity: CGFloat(hapticIntensity * 0.5))
         case .restEnd:
-            impactRigid.impactOccurred(intensity: hapticIntensity * 0.8)
+            impactRigid.impactOccurred(intensity: CGFloat(hapticIntensity * 0.8))
         case .workoutStart:
             playWorkoutStartPattern()
         case .workoutComplete:
             playWorkoutCompletePattern()
         case .countdownTick:
-            impactLight.impactOccurred(intensity: hapticIntensity * 0.4)
+            impactLight.impactOccurred(intensity: CGFloat(hapticIntensity * 0.4))
         case .countdownGo:
             playCountdownGoPattern()
 
@@ -163,7 +163,7 @@ final class HapticManager: ObservableObject {
     #if canImport(UIKit)
     private func playSetCompletePattern() {
         guard supportsHaptics, let engine = engine else {
-            impactMedium.impactOccurred(intensity: hapticIntensity)
+            impactMedium.impactOccurred(intensity: CGFloat(hapticIntensity))
             return
         }
 
@@ -184,13 +184,13 @@ final class HapticManager: ObservableObject {
             let player = try engine.makePlayer(with: pattern)
             try player.start(atTime: CHHapticTimeImmediate)
         } catch {
-            impactMedium.impactOccurred(intensity: hapticIntensity)
+            impactMedium.impactOccurred(intensity: CGFloat(hapticIntensity))
         }
     }
 
     private func playExerciseCompletePattern() {
         guard supportsHaptics, let engine = engine else {
-            impactHeavy.impactOccurred(intensity: hapticIntensity)
+            impactHeavy.impactOccurred(intensity: CGFloat(hapticIntensity))
             return
         }
 
@@ -211,7 +211,7 @@ final class HapticManager: ObservableObject {
             let player = try engine.makePlayer(with: pattern)
             try player.start(atTime: CHHapticTimeImmediate)
         } catch {
-            impactHeavy.impactOccurred(intensity: hapticIntensity)
+            impactHeavy.impactOccurred(intensity: CGFloat(hapticIntensity))
         }
     }
 
@@ -275,7 +275,7 @@ final class HapticManager: ObservableObject {
 
     private func playCountdownGoPattern() {
         guard supportsHaptics, let engine = engine else {
-            impactHeavy.impactOccurred(intensity: hapticIntensity)
+            impactHeavy.impactOccurred(intensity: CGFloat(hapticIntensity))
             return
         }
 
@@ -296,13 +296,13 @@ final class HapticManager: ObservableObject {
             let player = try engine.makePlayer(with: pattern)
             try player.start(atTime: CHHapticTimeImmediate)
         } catch {
-            impactHeavy.impactOccurred(intensity: hapticIntensity)
+            impactHeavy.impactOccurred(intensity: CGFloat(hapticIntensity))
         }
     }
 
     private func playXPEarnedPattern() {
         guard supportsHaptics, let engine = engine else {
-            impactLight.impactOccurred(intensity: hapticIntensity * 0.7)
+            impactLight.impactOccurred(intensity: CGFloat(hapticIntensity * 0.7))
             return
         }
 
@@ -323,7 +323,7 @@ final class HapticManager: ObservableObject {
             let player = try engine.makePlayer(with: pattern)
             try player.start(atTime: CHHapticTimeImmediate)
         } catch {
-            impactLight.impactOccurred(intensity: hapticIntensity * 0.7)
+            impactLight.impactOccurred(intensity: CGFloat(hapticIntensity * 0.7))
         }
     }
 

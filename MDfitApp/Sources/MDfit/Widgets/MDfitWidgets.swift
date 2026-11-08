@@ -9,12 +9,12 @@ struct MDfitWidgetProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (MDfitWidgetEntry) -> Void) {
-        let entry = MDfitWidgetData.shared.loadWidgetData()
+        let entry = MainActor.assumeIsolated { MDfitWidgetData.shared.loadWidgetData() }
         completion(entry)
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<MDfitWidgetEntry>) -> Void) {
-        let entry = MDfitWidgetData.shared.loadWidgetData()
+        let entry = MainActor.assumeIsolated { MDfitWidgetData.shared.loadWidgetData() }
 
         let nextUpdate = Calendar.current.date(byAdding: .minute, value: 30, to: Date())!
         let timeline = Timeline(entries: [entry], policy: .after(nextUpdate))

@@ -676,7 +676,7 @@ final class OfflineManager: ObservableObject {
         let request = APIRequest<EmptyResponse>(
             endpoint: .custom(path: path),
             method: .post,
-            body: action.payloadJSON.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+            body: action.payloadJSON.map(RawJSONBody.init)
         )
 
         try await APIClient.shared.execute(request)
@@ -690,7 +690,7 @@ final class OfflineManager: ObservableObject {
         let request = APIRequest<EmptyResponse>(
             endpoint: .custom(path: path),
             method: .post,
-            body: action.payloadJSON.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+            body: action.payloadJSON.map(RawJSONBody.init)
         )
 
         try await APIClient.shared.execute(request)
@@ -724,7 +724,7 @@ final class OfflineManager: ObservableObject {
         let request = APIRequest<EmptyResponse>(
             endpoint: .custom(path: path),
             method: .post,
-            body: action.payloadJSON.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+            body: action.payloadJSON.map(RawJSONBody.init)
         )
 
         try await APIClient.shared.execute(request)
@@ -738,7 +738,7 @@ final class OfflineManager: ObservableObject {
         let request = APIRequest<EmptyResponse>(
             endpoint: .custom(path: path),
             method: .post,
-            body: action.payloadJSON.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+            body: action.payloadJSON.map(RawJSONBody.init)
         )
 
         try await APIClient.shared.execute(request)
@@ -752,7 +752,7 @@ final class OfflineManager: ObservableObject {
         let request = APIRequest<EmptyResponse>(
             endpoint: .custom(path: path),
             method: .post,
-            body: action.payloadJSON.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+            body: action.payloadJSON.map(RawJSONBody.init)
         )
 
         try await APIClient.shared.execute(request)
@@ -777,7 +777,7 @@ final class OfflineManager: ObservableObject {
         let request = APIRequest<EmptyResponse>(
             endpoint: .custom(path: path),
             method: httpMethod,
-            body: action.payloadJSON.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
+            body: action.payloadJSON.map(RawJSONBody.init)
         )
 
         try await APIClient.shared.execute(request)
@@ -1006,3 +1006,43 @@ struct SyncStatusView: View {
 }
 
 #endif // os(iOS)
+
+
+// MARK: - Replaying stored JSON
+
+/// Re-sends a queued action's JSON payload exactly as it was stored. APIRequest.body must be Encodable, and a
+/// `[String: Any]` from JSONSerialization isn't, so this walks the parsed JSON and encodes it value by value.
+private struct RawJSONBody: Encodable {
+    let data: Data
+
+    func encode(to encoder: Encoder) throws {
+        let object = try JSONSerialization.jsonObject(with: data, options: [.fragmentsAllowed])
+        try RawJSONBody.encode(object, to: encoder)
+    }
+
+    private static func encode(_ value: Any, to encoder: Encoder) throws {
+        var single = encoder.singleValueContainer()
+        switch value {
+        case is NSNull: try single.encodeNil()
+        case let v as String: try single.encode(v)
+        case let v as Bool where CFGetTypeID(v as CFTypeRef) == CFBooleanGetTypeID(): try single.encode(v)
+        case let v as Int: try single.encode(v)
+        case let v as Double: try single.encode(v)
+        case let v as [Any]:
+            var c = encoder.unkeyedContainer()
+            for item in v { try encode(item, to: c.superEncoder()) }
+        case let v as [String: Any]:
+            var c = encoder.container(keyedBy: JSONKey.self)
+            for (k, item) in v { try encode(item, to: c.superEncoder(forKey: JSONKey(k))) }
+        default:
+            throw EncodingError.invalidValue(value, .init(codingPath: encoder.codingPath, debugDescription: "Unsupported JSON value"))
+        }
+    }
+
+    private struct JSONKey: CodingKey {
+        var stringValue: String; var intValue: Int? { nil }
+        init(_ s: String) { stringValue = s }
+        init?(stringValue: String) { self.stringValue = stringValue }
+        init?(intValue: Int) { nil }
+    }
+}
