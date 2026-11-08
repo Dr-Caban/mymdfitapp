@@ -107,15 +107,18 @@ workflows:
                   "relationships": {"bundleId": {"data": {"type": "bundleIds", "id": bid}}}}})
               print(f"{label}:", "turned on" if r else "could not be turned on (see above)")
               if r: changed = True
-          # Profiles for this App ID that are no longer valid, or predate the capability (Xcode-managed "XC ..." ones): delete
+          # Every App Store profile for this App ID is deleted, so the next step always issues a fresh one that
+          # carries the current capabilities (a profile never picks up a capability added after it was made).
           profs = api("GET", f"/profiles?filter[profileType]=IOS_APP_STORE&include=bundleId&limit=200") or {}
+          found = 0
           for pr in profs.get("data", []):
               rel = ((pr.get("relationships") or {}).get("bundleId") or {}).get("data") or {}
               if rel.get("id") != bid: continue
+              found += 1
               name, state = pr["attributes"]["name"], pr["attributes"]["profileState"]
-              if state != "ACTIVE" or name.startswith("XC ") or changed:
-                  print(f"deleting profile {name} ({state})"); api("DELETE", f"/profiles/{pr['id']}")
-              else: print(f"keeping profile {name} ({state})")
+              r = api("DELETE", f"/profiles/{pr['id']}")
+              print(f"profile {name} ({state}): {'deleted' if r is not None else 'could not be deleted (see above)'}")
+          print(f"{found} App Store profile(s) for {bundle} found")
           PY
       - name: Fetch or create the signing certificate and App Store profile
         # Uses the App Store Connect key from the MDfit integration (APP_STORE_CONNECT_* are set by Codemagic).
