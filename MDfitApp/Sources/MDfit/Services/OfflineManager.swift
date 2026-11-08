@@ -327,9 +327,10 @@ final class OfflineManager: ObservableObject {
 
         for exercise in exercises {
             // Check if already cached
+            let targetExerciseId = exercise.id   // #Predicate can only compare against plain local values
             let descriptor = FetchDescriptor<CachedExercise>(
                 predicate: #Predicate { cached in
-                    cached.exerciseId == exercise.id
+                    cached.exerciseId == targetExerciseId
                 }
             )
 
@@ -354,9 +355,10 @@ final class OfflineManager: ObservableObject {
         let context = ModelContext(container)
 
         for workout in workouts {
+            let targetWorkoutId = workout.id   // #Predicate can only compare against plain local values
             let descriptor = FetchDescriptor<CachedWorkout>(
                 predicate: #Predicate { cached in
-                    cached.workoutId == workout.id
+                    cached.workoutId == targetWorkoutId
                 }
             )
 
@@ -381,9 +383,10 @@ final class OfflineManager: ObservableObject {
         let context = ModelContext(container)
 
         for program in programs {
+            let targetProgramId = program.id   // #Predicate can only compare against plain local values
             let descriptor = FetchDescriptor<CachedProgram>(
                 predicate: #Predicate { cached in
-                    cached.programId == program.id
+                    cached.programId == targetProgramId
                 }
             )
 
@@ -613,9 +616,10 @@ final class OfflineManager: ObservableObject {
         let context = ModelContext(container)
 
         // Refetch to get fresh state
+        let targetActionId = action.actionId   // #Predicate can only compare against plain local values
         let descriptor = FetchDescriptor<OfflineAction>(
             predicate: #Predicate { a in
-                a.actionId == action.actionId
+                a.actionId == targetActionId
             }
         )
 

@@ -630,9 +630,10 @@ final class VideoDownloadManager: ObservableObject {
         let context = ModelContext(container)
 
         // Check for existing record
+        let targetVideoId = task.videoId   // #Predicate can only compare against plain local values
         let descriptor = FetchDescriptor<VideoDownloadRecord>(
             predicate: #Predicate { record in
-                record.videoId == task.videoId
+                record.videoId == targetVideoId
             }
         )
 
