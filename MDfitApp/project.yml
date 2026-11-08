@@ -1,11 +1,11 @@
 # XcodeGen spec: `cd MDfitApp && xcodegen generate` creates MDfit.xcodeproj (with a SHARED scheme, which CI needs).
-# The committed .xcodeproj was made by an older Xcode and lists only 34 of the Swift files, so CI regenerates it
-# from this file on every build. Docs: https://github.com/yonaskolb/XcodeGen
+# CI regenerates the project from this file on every build. The app is a native shell around the member app
+# at https://www.mymdfit.com/account (Sources/MDfit); the first native prototype is kept, uncompiled, in Legacy/. Docs: https://github.com/yonaskolb/XcodeGen
 name: MDfit
 options:
   bundleIdPrefix: com.mdfitsrq
   deploymentTarget:
-    iOS: "17.0"            # SwiftData (ModelContainer/ModelContext) is used unguarded in Services/, so iOS 16 can't compile
+    iOS: "17.0"            # EKEventEditViewController without calendar permission needs iOS 17
   xcodeVersion: "16.0"
   createIntermediateGroups: true
   generateEmptyDirectories: true
@@ -41,18 +41,6 @@ targets:
         SUPPORTS_MACCATALYST: NO
         SUPPORTED_PLATFORMS: "iphoneos iphonesimulator"
 
-  MDfitTests:
-    type: bundle.unit-test
-    platform: iOS
-    sources:
-      - path: Tests
-        name: MDfitTests
-    dependencies:
-      - target: MDfit
-    settings:
-      base:
-        PRODUCT_BUNDLE_IDENTIFIER: com.mdfitsrq.MDfitTests
-
 schemes:
   MDfit:
     build:
@@ -60,9 +48,5 @@ schemes:
         MDfit: all
     run:
       config: Debug
-    test:
-      config: Debug
-      targets:
-        - MDfitTests
     archive:
       config: Release

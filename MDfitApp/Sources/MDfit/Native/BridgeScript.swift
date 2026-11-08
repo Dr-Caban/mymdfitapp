@@ -1,0 +1,103 @@
+/// JavaScript injected into every mymdfit.com page in the app. It doesn't change the site's behaviour; it
+/// listens to what the member app already does (taps, the events account.js dispatches) and asks the native
+/// side for the iOS version of it.
+enum BridgeScript {
+    static let source = #"""
+    (function () {
+      if (window.MDFitNative) return;
+      var post = function (msg) {
+        try { window.webkit.messageHandlers.mdfit.postMessage(msg); } catch (e) {}
+      };
+
+      // Pages can check window.MDFitNative / html.in-ios-app to tailor themselves to the app
+      window.MDFitNative = {
+        isApp: true,
+        platform: "ios",
+        haptic: function (style) { post({ action: "haptic", style: style || "light" }); },
+        share: function (d) { d = d || {}; post({ action: "share", title: d.title || "", text: d.text || "", url: d.url || "" }); },
+        open: function (url) { post({ action: "open", url: String(url || "") }); }
+      };
+      document.documentElement.classList.add("in-ios-app");
+
+      // navigator.vibrate (gem level-ups, milestones) -> Taptic Engine
+      try {
+        navigator.vibrate = function (pattern) {
+          post({ action: "haptic", style: Array.isArray(pattern) && pattern.length > 1 ? "success" : "medium" });
+          return true;
+        };
+      } catch (e) {}
+
+      // Share (referral code, programs) -> native share sheet
+      if (!navigator.share) {
+        navigator.share = function (d) { window.MDFitNative.share(d); return Promise.resolve(); };
+      }
+
+      // Hide what doesn't apply inside the app:
+      //  - "Get the app" / Add to Home Screen cards (they're already in the app)
+      //  - Google sign-in: Google blocks sign-in inside apps' web views (email + password works)
+      var css =
+        "html.in-ios-app .install-card, html.in-ios-app #a2hs," +
+        "html.in-ios-app .google-signin-wrap, html.in-ios-app .auth-divider { display: none !important; }" +
+        "html.in-ios-app, html.in-ios-app body { -webkit-tap-highlight-color: transparent; }";
+      var addStyle = function () {
+        var s = document.createElement("style");
+        s.textContent = css;
+        (document.head || document.documentElement).appendChild(s);
+      };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", addStyle);
+      else addStyle();
+
+      // A light tap on buttons, a selection tick on the tab bar
+      var lastTap = 0;
+      document.addEventListener("click", function (e) {
+        var el = e.target && e.target.closest && e.target.closest("button, [role=button], [data-tab], .chip, a.btn, a.btn-gold, a.btn-blue");
+        if (!el) return;
+        var now = Date.now();
+        if (now - lastTap < 60) return;
+        lastTap = now;
+        post({ action: "haptic", style: el.closest(".tabbar, [data-tab]") ? "selection" : "light" });
+      }, true);
+
+      // "Add to calendar" links (.ics) -> native Add Event sheet
+      document.addEventListener("click", function (e) {
+        var a = e.target && e.target.closest && e.target.closest("a[download]");
+        if (!a) return;
+        var name = (a.getAttribute("download") || "").toLowerCase();
+        var href = a.getAttribute("href") || "";
+        if (name.slice(-4) !== ".ics" && href.indexOf("text/calendar") < 0) return;
+        e.preventDefault();
+        e.stopPropagation();
+        fetch(a.href).then(function (r) { return r.text(); })
+          .then(function (ics) { post({ action: "calendar", ics: ics }); })
+          .catch(function () {});
+      }, true);
+
+      // XP earned -> success haptic
+      var lastXp = null;
+      document.addEventListener("mdfit:rewards", function (e) {
+        var r = (e && e.detail) || {};
+        if (typeof r.xp === "number") {
+          if (lastXp !== null && r.xp > lastXp) post({ action: "haptic", style: "success" });
+          lastXp = r.xp;
+        }
+      });
+
+      // Finished a workout -> success haptic; first time, ask to allow streak reminders
+      document.addEventListener("mdfit:workout", function () {
+        post({ action: "haptic", style: "success" });
+        post({ action: "askNotifications" });
+      });
+
+      // Today's daily-goal status -> schedule (or cancel) tonight's "keep your streak" reminder
+      document.addEventListener("mdfit:habits", function (e) {
+        var d = (e && e.detail) || {};
+        post({
+          action: "streak",
+          qualifying: !!d.qualifying,
+          remaining: d.remaining || 0,
+          streak: (d.streak && d.streak.current) || 0
+        });
+      });
+    })();
+    """#
+}

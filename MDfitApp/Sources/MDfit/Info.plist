@@ -36,10 +36,6 @@
 		<key>UIImageName</key>
 		<string>MDFitLogo</string>
 	</dict>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>arm64</string>
-	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -63,8 +59,6 @@
 	<string>MD Fit saves the workouts you finish in the app to Apple Health, so all your training is in one place.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>MD Fit sends notifications to remind you about upcoming workouts, events, and to help maintain your fitness streak.</string>
-	<key>NSSupportsLiveActivities</key>
-	<true/>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleURLTypes</key>
@@ -78,6 +72,49 @@
 			<array>
 				<string>mdfit</string>
 			</array>
+		</dict>
+	</array>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.mdfitsrq.MDfit.generate</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Start a workout</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Workout generator</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>figure.strengthtraining.traditional</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.mdfitsrq.MDfit.pain</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Pain Tool</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Find what helps</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>figure.stand</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.mdfitsrq.MDfit.progress</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>My progress</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Streak, XP and calendar</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>chart.bar.fill</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.mdfitsrq.MDfit.messages</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Message Dr. Jared</string>
+			<key>UIApplicationShortcutItemSubtitle</key>
+			<string>Your conversation</string>
+			<key>UIApplicationShortcutItemIconSymbolName</key>
+			<string>message.fill</string>
 		</dict>
 	</array>
 </dict>
