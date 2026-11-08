@@ -57,7 +57,7 @@ workflows:
         script: |
           # Codemagic's variable field flattens a pasted multi-line PEM onto one line, which the CLI rejects as
           # "Not a valid certificate private key". Rebuild the PEM into a file first; accept base64 too.
-          set -e
+          set -eo pipefail
           KEY_FILE="$CM_BUILD_DIR/cert_private_key.pem"
           python3 - "$KEY_FILE" <<'PY'
           import os, re, sys, base64
