@@ -57,6 +57,10 @@
 	<string>MD Fit needs full access to your calendar to schedule workouts, events, and program reminders so you never miss a session.</string>
 	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
 	<string>MD Fit needs access to add workouts and events to your calendar so you never miss a session.</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>MD Fit reads your workouts, heart rate, steps and active energy from Apple Health so your progress, streaks and workout stats stay accurate. Your health data stays on your device and is never sold or used for advertising.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>MD Fit saves the workouts you finish in the app to Apple Health, so all your training is in one place.</string>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>MD Fit sends notifications to remind you about upcoming workouts, events, and to help maintain your fitness streak.</string>
 	<key>NSSupportsLiveActivities</key>
