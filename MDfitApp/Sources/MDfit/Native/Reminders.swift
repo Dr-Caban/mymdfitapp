@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 import UserNotifications
 
 /// Local "keep your streak" reminder: if today's daily goal isn't met yet, nudge at 7 PM; cancel it as soon
@@ -8,11 +8,22 @@ enum Reminders {
     private static let streakId = "mdfit-streak-today"
     private static let askedKey = "mdfit.asked.notifications"
 
-    /// Asked once, right after the member finishes a workout (not on first launch).
+    /// Asked once: the first time the signed-in member app loads, or after the first finished workout.
     static func requestPermissionIfNeeded() {
         guard !UserDefaults.standard.bool(forKey: askedKey) else { return }
         UserDefaults.standard.set(true, forKey: askedKey)
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
+        Task {
+            let granted = (try? await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])) ?? false
+            if granted { UIApplication.shared.registerForRemoteNotifications() }
+        }
+    }
+
+    /// Apple's device token can change, so it is fetched on every launch and sent to the server by the page.
+    static func registerForPushIfAllowed() {
+        Task {
+            let status = await UNUserNotificationCenter.current().notificationSettings().authorizationStatus
+            if status == .authorized || status == .provisional { UIApplication.shared.registerForRemoteNotifications() }
+        }
     }
 
     static func updateStreakReminder(qualifying: Bool, remaining: Int, streak: Int) {

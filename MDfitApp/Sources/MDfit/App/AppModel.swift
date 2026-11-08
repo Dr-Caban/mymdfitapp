@@ -16,6 +16,16 @@ final class AppModel: ObservableObject {
     weak var webView: WKWebView?
     private var pendingRoute: String?
 
+    /// APNs device token (hex). The page sends it to the server with the member's own login.
+    var deviceToken: String? {
+        didSet { pushDeviceTokenToPage() }
+    }
+
+    func pushDeviceTokenToPage() {
+        guard let token = deviceToken, let web = webView, hasLoadedOnce, Self.isSite(web.url) else { return }
+        web.evaluateJavaScript("window.MDFitNative && MDFitNative.setDeviceToken('\(token)')", completionHandler: nil)
+    }
+
     static func isSite(_ url: URL?) -> Bool {
         guard let host = url?.host?.lowercased() else { return false }
         return siteHosts.contains(host)
@@ -28,9 +38,12 @@ final class AppModel: ObservableObject {
             pendingRoute = hash
             return
         }
-        if Self.isSite(web.url), web.url?.path.hasPrefix("/account") == true {
-            web.evaluateJavaScript("location.hash = '#\(hash)'", completionHandler: nil)
-        } else if let url = URL(string: "https://www.mymdfit.com/account#\(hash)") {
+        // "admin" / "admin/messages": Dr. Jared's alerts open the management portal
+        let page = hash.hasPrefix("admin") ? "/admin" : "/account"
+        let tab = hash.hasPrefix("admin") ? String(hash.dropFirst("admin".count).drop(while: { $0 == "/" })) : hash
+        if Self.isSite(web.url), web.url?.path.hasPrefix(page) == true {
+            web.evaluateJavaScript("location.hash = '#\(tab)'", completionHandler: nil)
+        } else if let url = URL(string: "https://www.mymdfit.com\(page)#\(tab)") {
             web.load(URLRequest(url: url))
         }
     }
@@ -46,6 +59,11 @@ final class AppModel: ObservableObject {
         if let route = pendingRoute {
             pendingRoute = nil
             open(route: route)
+        }
+        pushDeviceTokenToPage()
+        // Signed in and looking at the member app or Admin: ask once to allow notifications (visits, messages)
+        if let path = webView?.url?.path, Self.isSite(webView?.url), path.hasPrefix("/account") || path.hasPrefix("/admin") {
+            Task { try? await Task.sleep(for: .seconds(4)); Reminders.requestPermissionIfNeeded() }
         }
     }
 

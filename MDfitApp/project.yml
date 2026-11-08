@@ -29,12 +29,14 @@ targets:
         name: MDfit
         excludes:
           - "Info.plist"              # referenced via INFOPLIST_FILE below, not copied as a resource
+          - "MDfit.entitlements"      # referenced via CODE_SIGN_ENTITLEMENTS below
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.mdfitsrq.MDfit     # must match the App Store Connect app record
         PRODUCT_NAME: MDfit
         INFOPLIST_FILE: Sources/MDfit/Info.plist          # the hand-written plist: keeps the calendar/notification usage strings
         GENERATE_INFOPLIST_FILE: NO
+        CODE_SIGN_ENTITLEMENTS: Sources/MDfit/MDfit.entitlements   # push notifications (aps-environment)
         TARGETED_DEVICE_FAMILY: "1,2"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

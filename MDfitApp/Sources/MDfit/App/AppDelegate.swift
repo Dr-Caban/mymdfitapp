@@ -9,7 +9,22 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         UNUserNotificationCenter.current().delegate = self
+        Reminders.registerForPushIfAllowed()   // a fresh APNs token on every launch, if notifications are allowed
         return true
+    }
+
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        UNUserNotificationCenter.current().setBadgeCount(0)
+    }
+
+    // MARK: Push notifications (bookings, appointment reminders, messages from Dr. Jared)
+
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        AppModel.shared.deviceToken = deviceToken.map { String(format: "%02x", $0) }.joined()
+    }
+
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        // Simulator, or no network: the local streak reminders still work
     }
 
     func application(

@@ -72,6 +72,41 @@ enum BridgeScript {
           .catch(function () {});
       }, true);
 
+      // Push notifications: the native side hands over Apple's device token; the page registers it with the
+      // member's login (or Dr. Jared's Admin login), so the server knows whose phone it is.
+      var deviceToken = "";
+      var syncDevice = function () {
+        if (!deviceToken) return;
+        try {
+          var api = (window.MDFIT_CONFIG && window.MDFIT_CONFIG.apiUrl ? window.MDFIT_CONFIG.apiUrl : location.origin).replace(/\/+$/, "");
+          var isAdmin = location.pathname.indexOf("/admin") === 0;
+          var token = isAdmin ? sessionStorage.getItem("mdfit_token") : (window.MDFit && MDFit.auth && MDFit.auth.get() || {}).token;
+          if (!token) return;
+          var key = "mdfit-pushed-" + (isAdmin ? "admin" : "member") + "-" + deviceToken.slice(0, 12) + "-" + token.slice(-12);
+          if (sessionStorage.getItem(key)) return;
+          fetch(api + (isAdmin ? "/api/admin/devices" : "/api/me/devices"), {
+            method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+            body: JSON.stringify({ token: deviceToken, platform: "ios" })
+          }).then(function (r) { if (r.ok) sessionStorage.setItem(key, "1"); }).catch(function () {});
+        } catch (e) {}
+      };
+      window.MDFitNative.setDeviceToken = function (t) { deviceToken = String(t || ""); syncDevice(); };
+      document.addEventListener("mdfit:rewards", syncDevice);          // fires once the member app has loaded signed in
+      window.addEventListener("load", function () { setTimeout(syncDevice, 1500); });
+      setInterval(syncDevice, 30000);                                   // e.g. Admin signs in without a page reload
+      // Signing out: this phone stops getting that person's notifications
+      document.addEventListener("click", function (e) {
+        var b = e.target && e.target.closest && e.target.closest("#logout");
+        if (!b || !deviceToken) return;
+        try {
+          var api = (window.MDFIT_CONFIG && window.MDFIT_CONFIG.apiUrl ? window.MDFIT_CONFIG.apiUrl : location.origin).replace(/\/+$/, "");
+          var isAdmin = location.pathname.indexOf("/admin") === 0;
+          var token = isAdmin ? sessionStorage.getItem("mdfit_token") : (window.MDFit && MDFit.auth && MDFit.auth.get() || {}).token;
+          if (token) fetch(api + (isAdmin ? "/api/admin/devices/" : "/api/me/devices/") + deviceToken, { method: "DELETE", keepalive: true, headers: { Authorization: "Bearer " + token } }).catch(function () {});
+          Object.keys(sessionStorage).forEach(function (k) { if (k.indexOf("mdfit-pushed-") === 0) sessionStorage.removeItem(k); });
+        } catch (e) {}
+      }, true);
+
       // Celebrations the site shows (the milestone pop-up and the celebrate toast) -> sound + haptic.
       // The pop-up's kicker says what it is: "New gem!" or "Milestone unlocked".
       var lastSound = 0;
