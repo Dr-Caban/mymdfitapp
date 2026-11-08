@@ -40,6 +40,7 @@ workflows:
     scripts:
       - name: Generate the Xcode project
         script: |
+          command -v xcodegen >/dev/null || brew install xcodegen   # not on every Codemagic image (exit 127 otherwise)
           cd MDfitApp
           rm -rf MDfit.xcodeproj            # the committed project is incomplete; always regenerate
           xcodegen --version
