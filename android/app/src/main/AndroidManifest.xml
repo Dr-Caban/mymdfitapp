@@ -34,6 +34,13 @@
                 <data android:scheme="https" android:host="www.mymdfit.com" />
                 <data android:scheme="https" android:host="mymdfit.com" />
             </intent-filter>
+            <!-- Back from Stripe Checkout / billing portal (opened in a Custom Tab) -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="mdfit" android:host="checkout" />
+            </intent-filter>
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>
 

@@ -40,6 +40,11 @@ final class NativeBridge: NSObject, WKScriptMessageHandler {
                 streak: (body["streak"] as? NSNumber)?.intValue ?? 0
             )
 
+        case "checkout":
+            if let s = body["url"] as? String, let url = URL(string: s), url.scheme == "https" {
+                CheckoutSheet.start(url: url, kind: body["kind"] as? String ?? "")
+            }
+
         case "appleSignIn":
             AppleSignIn.shared.start(webView: webView)
 

@@ -21,7 +21,9 @@ enum BridgeScript {
         platform: isAndroid ? "android" : "ios",
         haptic: function (style) { post({ action: "haptic", style: style || "light" }); },
         share: function (d) { d = d || {}; post({ action: "share", title: d.title || "", text: d.text || "", url: d.url || "" }); },
-        open: function (url) { post({ action: "open", url: String(url || "") }); }
+        open: function (url) { post({ action: "open", url: String(url || "") }); },
+        // Stripe Checkout / billing portal in a native browser sheet (Apple Pay, Google Pay); returns via mdfit://checkout
+        checkout: function (url, kind) { post({ action: "checkout", url: String(url || ""), kind: String(kind || "") }); }
       };
       document.documentElement.classList.add("in-ios-app", isAndroid ? "in-android-app" : "in-ios");
 

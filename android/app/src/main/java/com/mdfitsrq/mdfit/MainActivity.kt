@@ -102,6 +102,14 @@ class MainActivity : AppCompatActivity() {
         intent?.getStringExtra("route")?.let { intent.removeExtra("route"); open(it) }
         // App link https://www.mymdfit.com/...
         intent?.data?.let { if (intent.action == Intent.ACTION_VIEW && isSite(it)) { intent.data = null; web.loadUrl(it.toString()) } }
+        // Back from a payment: mdfit://checkout?to=/account?checkout=success…
+        intent?.data?.let {
+            if (it.scheme == "mdfit" && it.host == "checkout") {
+                var to = it.getQueryParameter("to") ?: "/account#premium"; intent.data = null
+                if (!to.startsWith("/") || to.startsWith("//")) to = "/account#premium"
+                web.loadUrl("https://www.mymdfit.com$to")
+            }
+        }
     }
 
     /** Opens a tab of the member app ("generate", "messages/dr") or Admin ("admin", "admin/messages"). */
@@ -126,6 +134,9 @@ class MainActivity : AppCompatActivity() {
             askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
         else Push.refreshToken(this)
     }
+
+    /** Stripe Checkout / billing portal in a Chrome Custom Tab (Google Pay works there); returns via mdfit://checkout */
+    fun openCheckout(url: Uri) = openOutside(url)
 
     private fun openOutside(url: Uri) {
         try {

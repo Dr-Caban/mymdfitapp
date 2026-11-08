@@ -36,6 +36,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
         if let item = options.shortcutItem {
             AppModel.shared.handleShortcut(item.type)
         }
+        // App launched by mdfit://checkout?… (back from Safari after a membership payment)
+        for ctx in options.urlContexts { AppModel.shared.handle(callback: ctx.url) }
         let config = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
         config.delegateClass = SceneDelegate.self
         return config
@@ -62,9 +64,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCent
     }
 }
 
-/// Quick actions while the app is already running.
+/// Quick actions and mdfit:// links while the app is already running.
 @MainActor
 final class SceneDelegate: NSObject, UIWindowSceneDelegate {
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        for ctx in URLContexts { AppModel.shared.handle(callback: ctx.url) }
+    }
+
     func windowScene(
         _ windowScene: UIWindowScene,
         performActionFor shortcutItem: UIApplicationShortcutItem,

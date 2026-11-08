@@ -48,6 +48,17 @@ final class AppModel: ObservableObject {
         }
     }
 
+    /// mdfit://checkout?to=/account?checkout=success…#premium (from /app-return after a payment, or a cancel)
+    func handle(callback url: URL) {
+        guard url.scheme?.lowercased() == "mdfit", url.host?.lowercased() == "checkout",
+              let items = URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems else { return }
+        var to = items.first(where: { $0.name == "to" })?.value ?? "/account#premium"
+        if !to.hasPrefix("/") || to.hasPrefix("//") { to = "/account#premium" }
+        guard let next = URL(string: "https://www.mymdfit.com" + to) else { return }
+        if let web = webView { web.load(URLRequest(url: next)) } else { pendingRoute = nil }
+        if items.contains(where: { $0.name == "cancel" }) == false { Haptics.play("success") }
+    }
+
     /// Quick action types look like "com.mdfitsrq.MDfit.generate"; the last part is the tab.
     func handleShortcut(_ type: String) {
         open(route: type.components(separatedBy: ".").last ?? "home")
