@@ -101,9 +101,12 @@ workflows:
           bid = match[0]["id"]
           caps = {c["attributes"]["capabilityType"] for c in ids.get("included", []) if c["type"] == "bundleIdCapabilities"}
           changed = False
+          # Sign in with Apple needs its "primary App ID" setting spelled out, or Apple rejects the request
+          SETTINGS = {"APPLE_ID_AUTH": [{"key": "APPLE_ID_AUTH_APP_CONSENT", "options": [{"key": "PRIMARY_APP_CONSENT"}]}]}
           for cap, label in (("PUSH_NOTIFICATIONS", "Push Notifications"), ("APPLE_ID_AUTH", "Sign in with Apple")):
               if cap in caps: print(f"{label}: already on"); continue
-              r = api("POST", "/bundleIdCapabilities", {"data": {"type": "bundleIdCapabilities", "attributes": {"capabilityType": cap},
+              attrs = {"capabilityType": cap, **({"settings": SETTINGS[cap]} if cap in SETTINGS else {})}
+              r = api("POST", "/bundleIdCapabilities", {"data": {"type": "bundleIdCapabilities", "attributes": attrs,
                   "relationships": {"bundleId": {"data": {"type": "bundleIds", "id": bid}}}}})
               print(f"{label}:", "turned on" if r else "could not be turned on (see above)")
               if r: changed = True
