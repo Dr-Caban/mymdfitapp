@@ -155,6 +155,7 @@ enum BridgeScript {
             if (t.indexOf("new gem") >= 0) sound("gem");
             else if (t.indexOf("badge unlocked") >= 0) sound("badge");
             else if (t.indexOf("daily goal") >= 0) sound("goal");
+            else if (/^\+\d+ xp/.test(t)) sound("xp");          // the "+15 XP" banner
           }).observe(toast, { attributes: true, attributeFilter: ["class", "hidden"] });
         }
       };
