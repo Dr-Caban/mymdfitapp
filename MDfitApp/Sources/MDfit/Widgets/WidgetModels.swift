@@ -138,7 +138,7 @@ struct WidgetEvent: Codable {
 // MARK: - Live Activity Attributes
 
 struct WorkoutActivityAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
+    struct ContentState: Codable, Hashable {
         var currentExerciseName: String
         var currentExerciseIndex: Int
         var totalExercises: Int

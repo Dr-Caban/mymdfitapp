@@ -4,12 +4,12 @@ import Security
 
 // MARK: - Auth Request/Response Models
 
-struct LoginRequest: Encodable {
+struct AuthLoginRequest: Encodable {   // AuthService-local shape; APIModels.LoginRequest is the backend contract
     let email: String
     let password: String
 }
 
-struct RegisterRequest: Encodable {
+struct AuthRegisterRequest: Encodable {
     let firstName: String
     let lastName: String
     let email: String
@@ -94,7 +94,7 @@ class AuthService: ObservableObject, APIClientAuthDelegate {
         }
 
         do {
-            let request = LoginRequest(email: email.lowercased().trimmingCharacters(in: .whitespaces), password: password)
+            let request = AuthLoginRequest(email: email.lowercased().trimmingCharacters(in: .whitespaces), password: password)
 
             let response: AuthResponse = try await APIClient.shared.post(.login, body: request)
 
@@ -143,7 +143,7 @@ class AuthService: ObservableObject, APIClientAuthDelegate {
         }
 
         do {
-            let request = RegisterRequest(
+            let request = AuthRegisterRequest(
                 firstName: firstName.trimmingCharacters(in: .whitespaces),
                 lastName: lastName.trimmingCharacters(in: .whitespaces),
                 email: email.lowercased().trimmingCharacters(in: .whitespaces),

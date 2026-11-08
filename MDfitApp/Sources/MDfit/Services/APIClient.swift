@@ -12,7 +12,7 @@ import os.log
 // MARK: - Configuration
 
 /// API environment configuration for staging and production
-public enum APIEnvironment: String, CaseIterable {
+enum APIEnvironment: String, CaseIterable {
     case development
     case staging
     case production
@@ -39,14 +39,14 @@ public enum APIEnvironment: String, CaseIterable {
 }
 
 /// Configuration for the API client
-public struct APIConfiguration {
+struct APIConfiguration {
     let environment: APIEnvironment
     let timeoutInterval: TimeInterval
     let maxRetryAttempts: Int
     let enableMockMode: Bool
     let additionalHeaders: [String: String]
 
-    public static let `default` = APIConfiguration(
+    static let `default` = APIConfiguration(
         environment: .development,
         timeoutInterval: 30,
         maxRetryAttempts: 3,
@@ -54,7 +54,7 @@ public struct APIConfiguration {
         additionalHeaders: [:]
     )
 
-    public static let mock = APIConfiguration(
+    static let mock = APIConfiguration(
         environment: .development,
         timeoutInterval: 30,
         maxRetryAttempts: 0,
@@ -62,7 +62,7 @@ public struct APIConfiguration {
         additionalHeaders: [:]
     )
 
-    public init(
+    init(
         environment: APIEnvironment,
         timeoutInterval: TimeInterval = 30,
         maxRetryAttempts: Int = 3,
@@ -80,7 +80,7 @@ public struct APIConfiguration {
 // MARK: - API Errors
 
 /// Comprehensive error types for API operations
-public enum APIError: LocalizedError, Equatable {
+enum APIError: LocalizedError, Equatable {
     // Network errors
     case noConnection
     case timeout
@@ -109,7 +109,7 @@ public enum APIError: LocalizedError, Equatable {
     // Generic
     case unknown(underlying: String)
 
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .noConnection:
             return "No internet connection. Please check your network settings."
@@ -153,7 +153,7 @@ public enum APIError: LocalizedError, Equatable {
         }
     }
 
-    public var isRetryable: Bool {
+    var isRetryable: Bool {
         switch self {
         case .timeout, .serverError, .noConnection:
             return true
@@ -164,7 +164,7 @@ public enum APIError: LocalizedError, Equatable {
         }
     }
 
-    public static func == (lhs: APIError, rhs: APIError) -> Bool {
+    static func == (lhs: APIError, rhs: APIError) -> Bool {
         switch (lhs, rhs) {
         case (.noConnection, .noConnection),
              (.timeout, .timeout),
@@ -200,7 +200,7 @@ public enum APIError: LocalizedError, Equatable {
 
 // MARK: - HTTP Methods
 
-public enum HTTPMethod: String {
+enum HTTPMethod: String {
     case get = "GET"
     case post = "POST"
     case put = "PUT"
@@ -211,7 +211,7 @@ public enum HTTPMethod: String {
 // MARK: - API Endpoints
 
 /// Type-safe API endpoints for MD Fit platform
-public enum APIEndpoint {
+enum APIEndpoint {
     // Auth
     case login
     case register
@@ -398,7 +398,7 @@ public enum APIEndpoint {
 // MARK: - API Request
 
 /// Represents an API request with all necessary components
-public struct APIRequest<Response: Decodable> {
+struct APIRequest<Response: Decodable> {
     let endpoint: APIEndpoint
     let method: HTTPMethod?
     let queryItems: [URLQueryItem]?
@@ -406,7 +406,7 @@ public struct APIRequest<Response: Decodable> {
     let headers: [String: String]?
     let requiresAuth: Bool?
 
-    public init(
+    init(
         endpoint: APIEndpoint,
         method: HTTPMethod? = nil,
         queryItems: [URLQueryItem]? = nil,
@@ -426,37 +426,37 @@ public struct APIRequest<Response: Decodable> {
 // MARK: - API Response
 
 /// Wrapper for paginated API responses
-public struct PaginatedResponse<T: Decodable>: Decodable {
-    public let data: [T]
-    public let pagination: PaginationInfo
+struct PaginatedResponse<T: Decodable>: Decodable {
+    let data: [T]
+    let pagination: PaginationInfo
 
-    public struct PaginationInfo: Decodable {
-        public let page: Int
-        public let perPage: Int
-        public let totalPages: Int
-        public let totalItems: Int
+    struct PaginationInfo: Decodable {
+        let page: Int
+        let perPage: Int
+        let totalPages: Int
+        let totalItems: Int
 
-        public var hasNextPage: Bool {
+        var hasNextPage: Bool {
             page < totalPages
         }
     }
 }
 
 /// Standard API response wrapper
-public struct APIResponse<T: Decodable>: Decodable {
-    public let success: Bool
-    public let data: T?
-    public let message: String?
-    public let errors: [String]?
+struct APIResponse<T: Decodable>: Decodable {
+    let success: Bool
+    let data: T?
+    let message: String?
+    let errors: [String]?
 }
 
 /// Empty response for endpoints that return no data
-public struct EmptyResponse: Decodable {}
+struct EmptyResponse: Decodable {}
 
 // MARK: - Token Manager
 
 /// Manages JWT authentication tokens
-public actor TokenManager {
+actor TokenManager {
     private var accessToken: String?
     private var refreshToken: String?
     private var tokenExpiresAt: Date?
@@ -466,39 +466,39 @@ public actor TokenManager {
     private let refreshTokenKey = "refresh_token"
     private let expiresAtKey = "token_expires_at"
 
-    public init() {
+    init() {
         loadTokensFromKeychain()
     }
 
-    public func setTokens(access: String, refresh: String?, expiresIn: TimeInterval) {
+    func setTokens(access: String, refresh: String?, expiresIn: TimeInterval) {
         self.accessToken = access
         self.refreshToken = refresh
         self.tokenExpiresAt = Date().addingTimeInterval(expiresIn)
         saveTokensToKeychain()
     }
 
-    public func getAccessToken() -> String? {
+    func getAccessToken() -> String? {
         accessToken
     }
 
-    public func getRefreshToken() -> String? {
+    func getRefreshToken() -> String? {
         refreshToken
     }
 
-    public func isTokenExpired() -> Bool {
+    func isTokenExpired() -> Bool {
         guard let expiresAt = tokenExpiresAt else { return true }
         // Consider token expired 60 seconds before actual expiration
         return Date().addingTimeInterval(60) >= expiresAt
     }
 
-    public func clearTokens() {
+    func clearTokens() {
         accessToken = nil
         refreshToken = nil
         tokenExpiresAt = nil
         deleteTokensFromKeychain()
     }
 
-    public func hasValidToken() -> Bool {
+    func hasValidToken() -> Bool {
         accessToken != nil && !isTokenExpired()
     }
 
@@ -677,15 +677,15 @@ final class RequestLogger {
 // MARK: - Mock Response Provider
 
 /// Protocol for providing mock responses during development
-public protocol MockResponseProvider {
+protocol MockResponseProvider {
     func mockResponse<T: Decodable>(for endpoint: APIEndpoint) async throws -> T
 }
 
 /// Default mock provider with sample responses
-public struct DefaultMockProvider: MockResponseProvider {
-    public init() {}
+struct DefaultMockProvider: MockResponseProvider {
+    init() {}
 
-    public func mockResponse<T: Decodable>(for endpoint: APIEndpoint) async throws -> T {
+    func mockResponse<T: Decodable>(for endpoint: APIEndpoint) async throws -> T {
         // Simulate network delay
         try await Task.sleep(nanoseconds: UInt64.random(in: 200_000_000...800_000_000))
 
@@ -698,7 +698,7 @@ public struct DefaultMockProvider: MockResponseProvider {
 // MARK: - API Client
 
 /// Main API client for MD Fit platform
-public actor APIClient {
+actor APIClient {
     // MARK: - Properties
 
     private let configuration: APIConfiguration
@@ -713,22 +713,22 @@ public actor APIClient {
     private weak var _authDelegate: APIClientAuthDelegate?
 
     /// Set the auth delegate for handling authentication events
-    public func setAuthDelegate(_ delegate: APIClientAuthDelegate?) {
+    func setAuthDelegate(_ delegate: APIClientAuthDelegate?) {
         self._authDelegate = delegate
     }
 
     /// Get the current auth delegate
-    public var authDelegate: APIClientAuthDelegate? {
+    var authDelegate: APIClientAuthDelegate? {
         _authDelegate
     }
 
     // MARK: - Singleton
 
-    public static let shared = APIClient()
+    static let shared = APIClient()
 
     // MARK: - Initialization
 
-    public init(
+    init(
         configuration: APIConfiguration = .default,
         session: URLSession? = nil,
         mockProvider: MockResponseProvider? = nil
@@ -769,7 +769,7 @@ public actor APIClient {
     // MARK: - Public API
 
     /// Execute an API request and return decoded response
-    public func execute<T: Decodable>(_ request: APIRequest<T>) async throws -> T {
+    func execute<T: Decodable>(_ request: APIRequest<T>) async throws -> T {
         // Use mock if enabled
         if configuration.enableMockMode, let provider = mockProvider {
             return try await provider.mockResponse(for: request.endpoint)
@@ -781,7 +781,7 @@ public actor APIClient {
     }
 
     /// Execute request without expecting a response body
-    public func execute(_ request: APIRequest<EmptyResponse>) async throws {
+    func execute(_ request: APIRequest<EmptyResponse>) async throws {
         if configuration.enableMockMode {
             try await Task.sleep(nanoseconds: 300_000_000)
             return
@@ -792,7 +792,7 @@ public actor APIClient {
     }
 
     /// Convenience method for GET requests
-    public func get<T: Decodable>(
+    func get<T: Decodable>(
         _ endpoint: APIEndpoint,
         queryItems: [URLQueryItem]? = nil
     ) async throws -> T {
@@ -805,7 +805,7 @@ public actor APIClient {
     }
 
     /// Convenience method for POST requests
-    public func post<T: Decodable, Body: Encodable>(
+    func post<T: Decodable, Body: Encodable>(
         _ endpoint: APIEndpoint,
         body: Body
     ) async throws -> T {
@@ -818,7 +818,7 @@ public actor APIClient {
     }
 
     /// Convenience method for PUT requests
-    public func put<T: Decodable, Body: Encodable>(
+    func put<T: Decodable, Body: Encodable>(
         _ endpoint: APIEndpoint,
         body: Body
     ) async throws -> T {
@@ -831,7 +831,7 @@ public actor APIClient {
     }
 
     /// Convenience method for DELETE requests
-    public func delete(_ endpoint: APIEndpoint) async throws {
+    func delete(_ endpoint: APIEndpoint) async throws {
         let request = APIRequest<EmptyResponse>(
             endpoint: endpoint,
             method: .delete
@@ -842,24 +842,24 @@ public actor APIClient {
     // MARK: - Token Management
 
     /// Set authentication tokens after login
-    public func setAuthTokens(access: String, refresh: String?, expiresIn: TimeInterval) async {
+    func setAuthTokens(access: String, refresh: String?, expiresIn: TimeInterval) async {
         await tokenManager.setTokens(access: access, refresh: refresh, expiresIn: expiresIn)
     }
 
     /// Clear authentication tokens on logout
-    public func clearAuthTokens() async {
+    func clearAuthTokens() async {
         await tokenManager.clearTokens()
     }
 
     /// Check if user has valid authentication
-    public func isAuthenticated() async -> Bool {
+    func isAuthenticated() async -> Bool {
         await tokenManager.hasValidToken()
     }
 
     // MARK: - Mock Mode
 
     /// Set mock provider for testing
-    public func setMockProvider(_ provider: MockResponseProvider?) {
+    func setMockProvider(_ provider: MockResponseProvider?) {
         self.mockProvider = provider
     }
 
@@ -1121,7 +1121,7 @@ public actor APIClient {
 
 /// Delegate protocol for handling authentication events
 @MainActor
-public protocol APIClientAuthDelegate: AnyObject {
+protocol APIClientAuthDelegate: AnyObject {
     func apiClientDidReceiveUnauthorized(_ client: APIClient)
     func apiClientDidRefreshToken(_ client: APIClient)
 }
@@ -1143,7 +1143,7 @@ private struct AnyEncodable: Encodable {
 
 // MARK: - Convenience Extensions
 
-public extension APIClient {
+extension APIClient {
     /// Upload file data with multipart form
     func upload<T: Decodable>(
         to endpoint: APIEndpoint,
@@ -1218,7 +1218,7 @@ public extension APIClient {
 // MARK: - Request Builder DSL
 
 /// Fluent builder for constructing API requests
-public class APIRequestBuilder<Response: Decodable> {
+class APIRequestBuilder<Response: Decodable> {
     private var endpoint: APIEndpoint
     private var method: HTTPMethod?
     private var queryItems: [URLQueryItem] = []
@@ -1226,23 +1226,23 @@ public class APIRequestBuilder<Response: Decodable> {
     private var headers: [String: String] = [:]
     private var requiresAuth: Bool?
 
-    public init(endpoint: APIEndpoint) {
+    init(endpoint: APIEndpoint) {
         self.endpoint = endpoint
     }
 
-    public func method(_ method: HTTPMethod) -> Self {
+    func method(_ method: HTTPMethod) -> Self {
         self.method = method
         return self
     }
 
-    public func query(_ name: String, value: String?) -> Self {
+    func query(_ name: String, value: String?) -> Self {
         if let value = value {
             queryItems.append(URLQueryItem(name: name, value: value))
         }
         return self
     }
 
-    public func queries(_ items: [String: String?]) -> Self {
+    func queries(_ items: [String: String?]) -> Self {
         for (name, value) in items {
             if let value = value {
                 queryItems.append(URLQueryItem(name: name, value: value))
@@ -1251,22 +1251,22 @@ public class APIRequestBuilder<Response: Decodable> {
         return self
     }
 
-    public func body<T: Encodable>(_ body: T) -> Self {
+    func body<T: Encodable>(_ body: T) -> Self {
         self.body = body
         return self
     }
 
-    public func header(_ name: String, value: String) -> Self {
+    func header(_ name: String, value: String) -> Self {
         headers[name] = value
         return self
     }
 
-    public func requiresAuth(_ requires: Bool) -> Self {
+    func requiresAuth(_ requires: Bool) -> Self {
         self.requiresAuth = requires
         return self
     }
 
-    public func build() -> APIRequest<Response> {
+    func build() -> APIRequest<Response> {
         APIRequest(
             endpoint: endpoint,
             method: method,
@@ -1277,14 +1277,14 @@ public class APIRequestBuilder<Response: Decodable> {
         )
     }
 
-    public func execute(with client: APIClient = .shared) async throws -> Response {
+    func execute(with client: APIClient = .shared) async throws -> Response {
         try await client.execute(build())
     }
 }
 
 // MARK: - Endpoint Builder Extension
 
-public extension APIEndpoint {
+extension APIEndpoint {
     func request<T: Decodable>() -> APIRequestBuilder<T> {
         APIRequestBuilder(endpoint: self)
     }

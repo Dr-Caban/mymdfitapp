@@ -16,14 +16,14 @@ import os.log
 // MARK: - Backend Configuration
 
 /// Configuration for the backend service
-public struct BackendConfiguration {
+struct BackendConfiguration {
     let useLocalCMS: Bool
     let localCMSPath: URL?
     let remoteBaseURL: URL?
     let cacheExpirationInterval: TimeInterval
     let enableOfflineMode: Bool
 
-    public static let `default` = BackendConfiguration(
+    static let `default` = BackendConfiguration(
         useLocalCMS: true,
         localCMSPath: nil,  // Uses bundle by default
         remoteBaseURL: URL(string: "https://api.mdfitsrq.com/api/v1"),
@@ -31,7 +31,7 @@ public struct BackendConfiguration {
         enableOfflineMode: true
     )
 
-    public static let remote = BackendConfiguration(
+    static let remote = BackendConfiguration(
         useLocalCMS: false,
         localCMSPath: nil,
         remoteBaseURL: URL(string: "https://api.mdfitsrq.com/api/v1"),
@@ -39,7 +39,7 @@ public struct BackendConfiguration {
         enableOfflineMode: true
     )
 
-    public init(
+    init(
         useLocalCMS: Bool,
         localCMSPath: URL? = nil,
         remoteBaseURL: URL? = nil,
@@ -57,7 +57,7 @@ public struct BackendConfiguration {
 // MARK: - Backend Error
 
 /// Errors that can occur during backend operations
-public enum BackendError: LocalizedError {
+enum BackendError: LocalizedError {
     case contentNotFound(type: String, id: String?)
     case loadingFailed(underlying: Error)
     case decodingFailed(underlying: Error)
@@ -67,7 +67,7 @@ public enum BackendError: LocalizedError {
     case unauthorized
     case serverError(message: String)
 
-    public var errorDescription: String? {
+    var errorDescription: String? {
         switch self {
         case .contentNotFound(let type, let id):
             if let id = id {
@@ -144,7 +144,7 @@ actor ContentCache {
 
 /// Main backend service for MD Fit content management
 /// Provides a unified interface for exercises, programs, pain mappings, and user data
-public actor BackendService {
+actor BackendService {
 
     // MARK: - Properties
 
@@ -166,11 +166,11 @@ public actor BackendService {
 
     // MARK: - Singleton
 
-    public static let shared = BackendService()
+    static let shared = BackendService()
 
     // MARK: - Initialization
 
-    public init(configuration: BackendConfiguration = .default) {
+    init(configuration: BackendConfiguration = .default) {
         self.configuration = configuration
         self.cache = ContentCache(defaultExpiration: configuration.cacheExpirationInterval)
 
@@ -191,7 +191,7 @@ public actor BackendService {
     // MARK: - Content Loading
 
     /// Load all content from CMS (local JSON or remote API)
-    public func loadContent() async throws {
+    func loadContent() async throws {
         if isLoaded { return }
 
         logger.info("Loading backend content...")
@@ -207,7 +207,7 @@ public actor BackendService {
     }
 
     /// Force reload all content
-    public func reloadContent() async throws {
+    func reloadContent() async throws {
         isLoaded = false
         await cache.clear()
         try await loadContent()
@@ -294,13 +294,13 @@ public actor BackendService {
     // MARK: - Exercise Operations
 
     /// Get all exercises
-    public func getAllExercises() async throws -> [Exercise] {
+    func getAllExercises() async throws -> [Exercise] {
         try await ensureLoaded()
         return Array(exercises.values).sorted { $0.name < $1.name }
     }
 
     /// Get exercise by ID
-    public func getExercise(id: String) async throws -> Exercise {
+    func getExercise(id: String) async throws -> Exercise {
         try await ensureLoaded()
         guard let exercise = exercises[id] else {
             throw BackendError.contentNotFound(type: "Exercise", id: id)
@@ -309,25 +309,25 @@ public actor BackendService {
     }
 
     /// Get exercises by body region
-    public func getExercises(forRegion region: BodyRegion) async throws -> [Exercise] {
+    func getExercises(forRegion region: BodyRegion) async throws -> [Exercise] {
         try await ensureLoaded()
         return exercises.values.filter { $0.bodyRegion == region }
     }
 
     /// Get exercises by category
-    public func getExercises(forCategory category: ExerciseCategory) async throws -> [Exercise] {
+    func getExercises(forCategory category: ExerciseCategory) async throws -> [Exercise] {
         try await ensureLoaded()
         return exercises.values.filter { $0.category == category }
     }
 
     /// Get exercises by IDs
-    public func getExercises(ids: [String]) async throws -> [Exercise] {
+    func getExercises(ids: [String]) async throws -> [Exercise] {
         try await ensureLoaded()
         return ids.compactMap { exercises[$0] }
     }
 
     /// Search exercises by name, tags, or muscle emphasis
-    public func searchExercises(query: String) async throws -> [Exercise] {
+    func searchExercises(query: String) async throws -> [Exercise] {
         try await ensureLoaded()
         let lowercaseQuery = query.lowercased()
         return exercises.values.filter { exercise in
@@ -338,7 +338,7 @@ public actor BackendService {
     }
 
     /// Get approved exercises only
-    public func getApprovedExercises() async throws -> [Exercise] {
+    func getApprovedExercises() async throws -> [Exercise] {
         try await ensureLoaded()
         return exercises.values.filter { $0.approvalStatus == .approved }
     }
@@ -346,13 +346,13 @@ public actor BackendService {
     // MARK: - Program Operations
 
     /// Get all programs
-    public func getAllPrograms() async throws -> [Program] {
+    func getAllPrograms() async throws -> [Program] {
         try await ensureLoaded()
         return Array(programs.values).sorted { $0.name < $1.name }
     }
 
     /// Get program by ID
-    public func getProgram(id: String) async throws -> Program {
+    func getProgram(id: String) async throws -> Program {
         try await ensureLoaded()
         guard let program = programs[id] else {
             throw BackendError.contentNotFound(type: "Program", id: id)
@@ -361,25 +361,25 @@ public actor BackendService {
     }
 
     /// Get programs by category
-    public func getPrograms(forCategory category: ProgramCategory) async throws -> [Program] {
+    func getPrograms(forCategory category: ProgramCategory) async throws -> [Program] {
         try await ensureLoaded()
         return programs.values.filter { $0.category == category }
     }
 
     /// Get published programs only
-    public func getPublishedPrograms() async throws -> [Program] {
+    func getPublishedPrograms() async throws -> [Program] {
         try await ensureLoaded()
         return programs.values.filter { $0.isPublished }
     }
 
     /// Get premium programs
-    public func getPremiumPrograms() async throws -> [Program] {
+    func getPremiumPrograms() async throws -> [Program] {
         try await ensureLoaded()
         return programs.values.filter { $0.isPremium }
     }
 
     /// Get free programs (included with membership)
-    public func getFreePrograms() async throws -> [Program] {
+    func getFreePrograms() async throws -> [Program] {
         try await ensureLoaded()
         return programs.values.filter { !$0.isPremium || $0.price == nil }
     }
@@ -387,7 +387,7 @@ public actor BackendService {
     // MARK: - Pain Tool Operations
 
     /// Get pain mappings for a body region
-    public func getPainMappings(forRegion region: BodyRegion) async throws -> [PainMapping] {
+    func getPainMappings(forRegion region: BodyRegion) async throws -> [PainMapping] {
         try await ensureLoaded()
         return painMappings.values.filter {
             $0.bodyRegion == region || $0.referredAreas.contains(region)
@@ -395,7 +395,7 @@ public actor BackendService {
     }
 
     /// Get pain mapping by ID
-    public func getPainMapping(id: String) async throws -> PainMapping {
+    func getPainMapping(id: String) async throws -> PainMapping {
         try await ensureLoaded()
         guard let mapping = painMappings[id] else {
             throw BackendError.contentNotFound(type: "PainMapping", id: id)
@@ -404,13 +404,13 @@ public actor BackendService {
     }
 
     /// Get exercises for a pain pattern
-    public func getExercisesForPain(mappingId: String) async throws -> [Exercise] {
+    func getExercisesForPain(mappingId: String) async throws -> [Exercise] {
         let mapping = try await getPainMapping(id: mappingId)
         return try await getExercises(ids: mapping.suggestedExerciseIds)
     }
 
     /// Get all pain mappings
-    public func getAllPainMappings() async throws -> [PainMapping] {
+    func getAllPainMappings() async throws -> [PainMapping] {
         try await ensureLoaded()
         return Array(painMappings.values)
     }
@@ -418,7 +418,7 @@ public actor BackendService {
     // MARK: - User Management
 
     /// Get user by ID
-    public func getUser(id: String) async throws -> User {
+    func getUser(id: String) async throws -> User {
         // Try cache first
         if let cached: User = await cache.get("user_\(id)") {
             return cached
@@ -434,7 +434,7 @@ public actor BackendService {
     }
 
     /// Create or update user
-    public func saveUser(_ user: User) async throws {
+    func saveUser(_ user: User) async throws {
         users[user.id] = user
         await cache.set("user_\(user.id)", value: user)
 
@@ -443,7 +443,7 @@ public actor BackendService {
     }
 
     /// Delete user
-    public func deleteUser(id: String) async throws {
+    func deleteUser(id: String) async throws {
         users.removeValue(forKey: id)
         await cache.remove("user_\(id)")
         entitlements.removeValue(forKey: id)
@@ -454,13 +454,13 @@ public actor BackendService {
     // MARK: - Subscription & Entitlement Operations
 
     /// Get user's subscription
-    public func getSubscription(userId: String) async throws -> Subscription? {
+    func getSubscription(userId: String) async throws -> Subscription? {
         let user = try await getUser(id: userId)
         return user.subscription
     }
 
     /// Check if user has entitlement
-    public func hasEntitlement(userId: String, type: EntitlementType, resourceId: String? = nil) async throws -> Bool {
+    func hasEntitlement(userId: String, type: EntitlementType, resourceId: String? = nil) async throws -> Bool {
         let user = try await getUser(id: userId)
 
         // Check subscription first
@@ -477,7 +477,7 @@ public actor BackendService {
     }
 
     /// Grant entitlement to user
-    public func grantEntitlement(
+    func grantEntitlement(
         userId: String,
         type: EntitlementType,
         resourceId: String? = nil,
@@ -502,7 +502,7 @@ public actor BackendService {
     }
 
     /// Revoke entitlement from user
-    public func revokeEntitlement(userId: String, entitlementId: String) async throws {
+    func revokeEntitlement(userId: String, entitlementId: String) async throws {
         var user = try await getUser(id: userId)
         user.entitlements.removeAll { $0.id == entitlementId }
         try await saveUser(user)
@@ -511,7 +511,7 @@ public actor BackendService {
     }
 
     /// Get user's entitlements
-    public func getEntitlements(userId: String) async throws -> [Entitlement] {
+    func getEntitlements(userId: String) async throws -> [Entitlement] {
         let user = try await getUser(id: userId)
         return user.entitlements.filter { $0.isValid }
     }
@@ -519,7 +519,7 @@ public actor BackendService {
     // MARK: - Content Access Control
 
     /// Check if user can access exercise
-    public func canAccessExercise(userId: String?, exerciseId: String) async throws -> Bool {
+    func canAccessExercise(userId: String?, exerciseId: String) async throws -> Bool {
         guard let userId = userId else {
             // Anonymous users: check if exercise is free
             let exercise = try await getExercise(id: exerciseId)
@@ -531,7 +531,7 @@ public actor BackendService {
     }
 
     /// Check if user can access program
-    public func canAccessProgram(userId: String, programId: String) async throws -> Bool {
+    func canAccessProgram(userId: String, programId: String) async throws -> Bool {
         let program = try await getProgram(id: programId)
 
         // Free programs accessible to all
@@ -549,7 +549,7 @@ public actor BackendService {
     // MARK: - Analytics Data (for Admin)
 
     /// Get content statistics
-    public func getContentStats() async throws -> ContentStats {
+    func getContentStats() async throws -> ContentStats {
         try await ensureLoaded()
 
         let approvedExercises = exercises.values.filter { $0.approvalStatus == .approved }.count
@@ -569,7 +569,7 @@ public actor BackendService {
     // MARK: - CMS Write Operations (Admin)
 
     /// Update exercise (admin only)
-    public func updateExercise(_ exercise: Exercise) async throws {
+    func updateExercise(_ exercise: Exercise) async throws {
         exercises[exercise.id] = exercise
         await cache.remove("exercises_all")
 
@@ -578,7 +578,7 @@ public actor BackendService {
     }
 
     /// Update program (admin only)
-    public func updateProgram(_ program: Program) async throws {
+    func updateProgram(_ program: Program) async throws {
         programs[program.id] = program
         await cache.remove("programs_all")
 
@@ -586,7 +586,7 @@ public actor BackendService {
     }
 
     /// Update pain mapping (admin only)
-    public func updatePainMapping(_ mapping: PainMapping) async throws {
+    func updatePainMapping(_ mapping: PainMapping) async throws {
         painMappings[mapping.id] = mapping
 
         logger.info("Updated pain mapping: \(mapping.id)")
@@ -627,21 +627,21 @@ struct CMSPainMappingsResponse: Codable {
 // MARK: - Pain Mapping Model (for CMS)
 
 /// Pain mapping structure used in CMS
-public struct PainMapping: Identifiable, Codable, Hashable {
-    public let id: String
-    public var name: String
-    public var bodyRegion: BodyRegion
-    public var referredAreas: [BodyRegion]
-    public var commonCauses: [String]
-    public var redFlags: [String]
-    public var suggestedExerciseIds: [String]
-    public var educationalContent: String
-    public var disclaimer: String
-    public var thumbnailURL: URL?
-    public var severity: PainSeverity
-    public var isActive: Bool
+struct PainMapping: Identifiable, Codable, Hashable {
+    let id: String
+    var name: String
+    var bodyRegion: BodyRegion
+    var referredAreas: [BodyRegion]
+    var commonCauses: [String]
+    var redFlags: [String]
+    var suggestedExerciseIds: [String]
+    var educationalContent: String
+    var disclaimer: String
+    var thumbnailURL: URL?
+    var severity: PainSeverity
+    var isActive: Bool
 
-    public init(
+    init(
         id: String,
         name: String,
         bodyRegion: BodyRegion,
@@ -671,12 +671,12 @@ public struct PainMapping: Identifiable, Codable, Hashable {
 }
 
 /// Pain severity levels
-public enum PainSeverity: String, Codable, CaseIterable, Hashable {
+enum PainSeverity: String, Codable, CaseIterable, Hashable {
     case mild
     case moderate
     case severe
 
-    public var displayName: String {
+    var displayName: String {
         rawValue.capitalized
     }
 }
@@ -684,19 +684,19 @@ public enum PainSeverity: String, Codable, CaseIterable, Hashable {
 // MARK: - Content Stats
 
 /// Statistics about CMS content
-public struct ContentStats: Codable {
-    public let totalExercises: Int
-    public let approvedExercises: Int
-    public let totalPrograms: Int
-    public let publishedPrograms: Int
-    public let totalPainMappings: Int
-    public let totalUsers: Int
-    public let lastUpdated: Date
+struct ContentStats: Codable {
+    let totalExercises: Int
+    let approvedExercises: Int
+    let totalPrograms: Int
+    let publishedPrograms: Int
+    let totalPainMappings: Int
+    let totalUsers: Int
+    let lastUpdated: Date
 }
 
 // MARK: - Convenience Extensions
 
-public extension BackendService {
+extension BackendService {
 
     /// Get exercises suitable for a workout with given criteria
     func getExercisesForWorkout(

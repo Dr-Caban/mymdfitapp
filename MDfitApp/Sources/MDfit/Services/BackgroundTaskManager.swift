@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 // MARK: - Background Task Identifiers (Available without SwiftData)
 
