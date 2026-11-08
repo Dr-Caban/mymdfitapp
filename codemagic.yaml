@@ -51,6 +51,54 @@ workflows:
         script: |
           cd MDfitApp
           agvtool new-version -all "$BUILD_NUMBER"
+      - name: Turn on Push Notifications for the App ID and retire stale profiles
+        # The app has the aps-environment entitlement, so the App ID needs the Push Notifications capability and the
+        # provisioning profile must include it. Done through the App Store Connect API with the integration's key,
+        # so nobody has to click through developer.apple.com. Profiles that no longer match are deleted; the next
+        # step then creates a fresh one.
+        script: |
+          set -eo pipefail
+          python3 - <<'PY'
+          import os, sys, json, time, base64, subprocess, tempfile, urllib.request, urllib.error
+          kid = os.environ["APP_STORE_CONNECT_KEY_IDENTIFIER"]; iss = os.environ["APP_STORE_CONNECT_ISSUER_ID"]
+          key = os.environ["APP_STORE_CONNECT_PRIVATE_KEY"].replace("\\n", "\n")
+          bundle = os.environ["BUNDLE_ID"]
+          kf = tempfile.NamedTemporaryFile("w", suffix=".p8", delete=False); kf.write(key if key.endswith("\n") else key + "\n"); kf.close()
+          b64 = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
+          head = b64(json.dumps({"alg": "ES256", "kid": kid, "typ": "JWT"}).encode())
+          now = int(time.time()); body = b64(json.dumps({"iss": iss, "iat": now, "exp": now + 1200, "aud": "appstoreconnect-v1"}).encode())
+          der = subprocess.run(["openssl", "dgst", "-sha256", "-sign", kf.name], input=f"{head}.{body}".encode(), capture_output=True, check=True).stdout
+          # DER ECDSA signature -> raw r||s (32 bytes each), which JWT needs
+          i = 2; rl = der[i + 1]; r = der[i + 2:i + 2 + rl]; i = i + 2 + rl; sl = der[i + 1]; s_ = der[i + 2:i + 2 + sl]
+          raw = r[-32:].rjust(32, b"\0") + s_[-32:].rjust(32, b"\0")
+          jwt = f"{head}.{body}.{b64(raw)}"
+          def api(method, path, data=None):
+              req = urllib.request.Request("https://api.appstoreconnect.apple.com/v1" + path, method=method,
+                  data=json.dumps(data).encode() if data else None, headers={"Authorization": f"Bearer {jwt}", "Content-Type": "application/json"})
+              try:
+                  with urllib.request.urlopen(req) as r: return json.loads(r.read() or b"{}") if r.status != 204 else {}
+              except urllib.error.HTTPError as e:
+                  print(f"{method} {path} -> HTTP {e.code}: {e.read().decode()[:300]}"); return None
+          ids = api("GET", f"/bundleIds?filter[identifier]={bundle}&include=bundleIdCapabilities") or {}
+          match = [d for d in ids.get("data", []) if d["attributes"]["identifier"] == bundle]
+          if not match: sys.exit(f"No App ID {bundle} in this team: create it in App Store Connect first.")
+          bid = match[0]["id"]
+          caps = {c["attributes"]["capabilityType"] for c in ids.get("included", []) if c["type"] == "bundleIdCapabilities"}
+          if "PUSH_NOTIFICATIONS" in caps: print("Push Notifications: already on")
+          else:
+              r = api("POST", "/bundleIdCapabilities", {"data": {"type": "bundleIdCapabilities", "attributes": {"capabilityType": "PUSH_NOTIFICATIONS"},
+                  "relationships": {"bundleId": {"data": {"type": "bundleIds", "id": bid}}}}})
+              print("Push Notifications:", "turned on" if r else "could not be turned on (see above)")
+          # Profiles for this App ID that are no longer valid, or predate the capability (Xcode-managed "XC ..." ones): delete
+          profs = api("GET", f"/profiles?filter[profileType]=IOS_APP_STORE&include=bundleId&limit=200") or {}
+          for pr in profs.get("data", []):
+              rel = ((pr.get("relationships") or {}).get("bundleId") or {}).get("data") or {}
+              if rel.get("id") != bid: continue
+              name, state = pr["attributes"]["name"], pr["attributes"]["profileState"]
+              if state != "ACTIVE" or name.startswith("XC ") or "PUSH_NOTIFICATIONS" not in caps:
+                  print(f"deleting profile {name} ({state})"); api("DELETE", f"/profiles/{pr['id']}")
+              else: print(f"keeping profile {name} ({state})")
+          PY
       - name: Fetch or create the signing certificate and App Store profile
         # Uses the App Store Connect key from the MDfit integration (APP_STORE_CONNECT_* are set by Codemagic).
         # --create makes an Apple Distribution certificate and an App Store profile for the bundle id when none exist.
