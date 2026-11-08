@@ -28,7 +28,7 @@ struct MainTabView: View {
                 case 1: WorkoutGeneratorView()
                 case 2: VideoLibraryView()
                 case 3: PainToolView()
-                case 4: ProgressView()
+                case 4: ProgressTabView()
                 case 5: ProfileView()
                 case 6: Color.mdCream.onAppear { showMoreMenu = true }
                 default: HomeView()

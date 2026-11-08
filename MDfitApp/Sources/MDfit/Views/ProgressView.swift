@@ -1,6 +1,7 @@
 import SwiftUI
 
-struct ProgressView: View {
+// Named ProgressTabView so it doesn't shadow SwiftUI.ProgressView (the spinner / progress bar).
+struct ProgressTabView: View {
     @State private var selectedMonth = Date()
     @State private var weightInput = ""
     @State private var selectedSleep: String? = nil
@@ -472,8 +473,8 @@ struct BadgeCard: View {
 
 // MARK: - Preview
 
-struct ProgressView_Previews: PreviewProvider {
+struct ProgressTabView_Previews: PreviewProvider {
     static var previews: some View {
-        ProgressView()
+        ProgressTabView()
     }
 }

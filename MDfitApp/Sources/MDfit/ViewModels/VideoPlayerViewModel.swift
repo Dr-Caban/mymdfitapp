@@ -132,7 +132,7 @@ final class VideoPlayerViewModel: NSObject, ObservableObject {
     }
 
     deinit {
-        cleanupPlayer()
+        MainActor.assumeIsolated { cleanupPlayer() }
     }
 
     // MARK: - Audio Session Setup

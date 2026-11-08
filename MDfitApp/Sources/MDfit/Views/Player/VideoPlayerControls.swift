@@ -8,11 +8,7 @@
 import SwiftUI
 import AVKit
 
-// MARK: - Design Tokens
-extension Color {
-    static let mdGold = Color(red: 0.831, green: 0.659, blue: 0.294)
-    static let mdBlue = Color(red: 0.0, green: 0.322, blue: 0.647)
-}
+// Colour tokens (mdGold, mdBlue, ...) come from Resources/Theme.swift.
 
 // MARK: - Video Player Controls
 struct VideoPlayerControls: View {
