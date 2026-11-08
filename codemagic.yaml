@@ -55,7 +55,25 @@ workflows:
         # Uses the App Store Connect key from the MDfit integration (APP_STORE_CONNECT_* are set by Codemagic).
         # --create makes an Apple Distribution certificate and an App Store profile for the bundle id when none exist.
         script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+          # Codemagic's variable field flattens a pasted multi-line PEM onto one line, which the CLI rejects as
+          # "Not a valid certificate private key". Rebuild the PEM into a file first; accept base64 too.
+          set -e
+          KEY_FILE="$CM_BUILD_DIR/cert_private_key.pem"
+          python3 - "$KEY_FILE" <<'PY'
+          import os, re, sys, base64
+          raw = os.environ.get("CERTIFICATE_PRIVATE_KEY", "").strip()
+          if not raw: sys.exit("CERTIFICATE_PRIVATE_KEY is empty: add it in Codemagic → app settings → Environment variables (group 'signing').")
+          if "-----BEGIN" not in raw:            # stored as base64 of the whole file
+              raw = base64.b64decode(raw).decode()
+          m = re.search(r"-----BEGIN ([A-Z ]*PRIVATE KEY)-----(.*?)-----END \1-----", raw, re.S)
+          if not m: sys.exit("CERTIFICATE_PRIVATE_KEY doesn't contain a BEGIN/END PRIVATE KEY block.")
+          kind, body = m.group(1), re.sub(r"\s+", "", m.group(2))
+          lines = [body[i:i+64] for i in range(0, len(body), 64)]
+          open(sys.argv[1], "w").write(f"-----BEGIN {kind}-----\n" + "\n".join(lines) + f"\n-----END {kind}-----\n")
+          print(f"private key ok: {kind}, {len(body)} base64 chars")
+          PY
+          chmod 600 "$KEY_FILE"
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create --certificate-key "@file:$KEY_FILE"
       - name: Add the certificate to the keychain
         script: |
           keychain initialize
