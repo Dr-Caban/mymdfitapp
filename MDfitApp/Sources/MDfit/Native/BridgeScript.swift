@@ -38,11 +38,12 @@ enum BridgeScript {
         navigator.share = function (d) { window.MDFitNative.share(d); return Promise.resolve(); };
       }
 
-      // Hide what doesn't apply inside the app: "Get the app" / Add to Home Screen cards, and Google sign-in
-      // (Google blocks it inside apps' web views). On iPhone, "Continue with Apple" takes its place.
+      // Hide what doesn't apply inside the app: "Get the app" / Add to Home Screen cards, and the website's own
+      // sign-in buttons (.sso-wrap: Apple's web pop-up can't run in a web view). On iPhone the native
+      // "Continue with Apple" sheet takes their place; Android members use email + password.
       var css =
         "html.in-ios-app .install-card, html.in-ios-app #a2hs," +
-        "html.in-ios-app .google-signin-wrap { display: none !important; }" +
+        "html.in-ios-app .sso-wrap, html.in-ios-app .google-signin-wrap { display: none !important; }" +
         "html.in-android-app .auth-divider { display: none !important; }" +
         "html.in-ios .auth-divider { display: block !important; }" +
         "html.in-ios-app .native-apple { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 320px; margin: 6px auto 0;" +
@@ -53,7 +54,7 @@ enum BridgeScript {
       var APPLE_LOGO = '<svg viewBox="0 0 24 24"><path d="M16.37 12.77c.03 2.86 2.5 3.81 2.53 3.82-.02.07-.4 1.36-1.3 2.7-.79 1.15-1.6 2.3-2.89 2.33-1.26.02-1.67-.75-3.11-.75s-1.9.72-3.09.77c-1.24.05-2.19-1.25-2.98-2.4C3.9 16.9 2.66 12.6 4.33 9.68c.83-1.45 2.31-2.37 3.92-2.4 1.22-.02 2.37.83 3.11.83.74 0 2.14-1.02 3.61-.87.62.03 2.34.25 3.45 1.88-.09.06-2.06 1.2-2.05 3.65zM14 5.7c.66-.8 1.1-1.9.98-3-.95.04-2.09.63-2.77 1.43-.61.7-1.14 1.83-1 2.91 1.06.08 2.13-.54 2.79-1.34z"/></svg>';
       var addAppleButtons = function () {
         if (isAndroid || location.pathname.indexOf("/login") !== 0) return;
-        document.querySelectorAll(".google-signin-wrap").forEach(function (wrap) {
+        document.querySelectorAll(".sso-wrap, .google-signin-wrap").forEach(function (wrap) {
           if (wrap.previousElementSibling && wrap.previousElementSibling.classList.contains("native-apple")) return;
           var b = document.createElement("button");
           b.type = "button"; b.className = "native-apple"; b.innerHTML = APPLE_LOGO + "<span>Continue with Apple</span>";
