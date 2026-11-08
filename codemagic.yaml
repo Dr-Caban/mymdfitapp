@@ -59,15 +59,23 @@ workflows:
         script: |
           set -eo pipefail
           python3 - <<'PY'
-          import os, sys, json, time, base64, subprocess, tempfile, urllib.request, urllib.error
+          import os, re, sys, json, time, base64, subprocess, tempfile, urllib.request, urllib.error
           kid = os.environ["APP_STORE_CONNECT_KEY_IDENTIFIER"]; iss = os.environ["APP_STORE_CONNECT_ISSUER_ID"]
-          key = os.environ["APP_STORE_CONNECT_PRIVATE_KEY"].replace("\\n", "\n")
           bundle = os.environ["BUNDLE_ID"]
-          kf = tempfile.NamedTemporaryFile("w", suffix=".p8", delete=False); kf.write(key if key.endswith("\n") else key + "\n"); kf.close()
+          # The key may be stored flattened onto one line, with literal "\n", or as base64 of the .p8: rebuild a clean PEM
+          raw = os.environ["APP_STORE_CONNECT_PRIVATE_KEY"].strip().replace("\\n", "\n")
+          if "-----BEGIN" not in raw: raw = base64.b64decode(raw).decode()
+          m = re.search(r"-----BEGIN ([A-Z ]*PRIVATE KEY)-----(.*?)-----END \1-----", raw, re.S) or sys.exit("APP_STORE_CONNECT_PRIVATE_KEY has no BEGIN/END PRIVATE KEY block")
+          body_ = re.sub(r"\s+", "", m.group(2)); pem = f"-----BEGIN {m.group(1)}-----\n" + "\n".join(body_[i:i+64] for i in range(0, len(body_), 64)) + f"\n-----END {m.group(1)}-----\n"
+          kf = tempfile.NamedTemporaryFile("w", suffix=".p8", delete=False); kf.write(pem); kf.close()
+          chk = subprocess.run(["openssl", "pkey", "-in", kf.name, "-noout"], capture_output=True, text=True)
+          if chk.returncode: sys.exit("The App Store Connect key doesn't parse: " + chk.stderr.strip()[:300])
           b64 = lambda b: base64.urlsafe_b64encode(b).rstrip(b"=").decode()
           head = b64(json.dumps({"alg": "ES256", "kid": kid, "typ": "JWT"}).encode())
           now = int(time.time()); body = b64(json.dumps({"iss": iss, "iat": now, "exp": now + 1200, "aud": "appstoreconnect-v1"}).encode())
-          der = subprocess.run(["openssl", "dgst", "-sha256", "-sign", kf.name], input=f"{head}.{body}".encode(), capture_output=True, check=True).stdout
+          sig = subprocess.run(["openssl", "dgst", "-sha256", "-sign", kf.name], input=f"{head}.{body}".encode(), capture_output=True)
+          if sig.returncode: sys.exit("openssl could not sign with the App Store Connect key: " + sig.stderr.decode().strip()[:300])
+          der = sig.stdout
           # DER ECDSA signature -> raw r||s (32 bytes each), which JWT needs
           i = 2; rl = der[i + 1]; r = der[i + 2:i + 2 + rl]; i = i + 2 + rl; sl = der[i + 1]; s_ = der[i + 2:i + 2 + sl]
           raw = r[-32:].rjust(32, b"\0") + s_[-32:].rjust(32, b"\0")
