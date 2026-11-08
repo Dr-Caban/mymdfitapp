@@ -34,13 +34,6 @@
                 <data android:scheme="https" android:host="www.mymdfit.com" />
                 <data android:scheme="https" android:host="mymdfit.com" />
             </intent-filter>
-            <!-- Return from the browser sign-in (Google) -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="mdfit" android:host="auth" />
-            </intent-filter>
             <meta-data android:name="android.app.shortcuts" android:resource="@xml/shortcuts" />
         </activity>
 

@@ -38,29 +38,54 @@ enum BridgeScript {
         navigator.share = function (d) { window.MDFitNative.share(d); return Promise.resolve(); };
       }
 
-      // Hide what doesn't apply inside the app: "Get the app" / Add to Home Screen cards, and Google's own button
-      // (Google blocks sign-in inside apps' web views). A native "Continue with Google" button takes its place: it
-      // signs in through the phone's browser and hands the session back to the app (see /login?app=1).
+      // Hide what doesn't apply inside the app: "Get the app" / Add to Home Screen cards, and Google sign-in
+      // (Google blocks it inside apps' web views). On iPhone, "Continue with Apple" takes its place.
       var css =
         "html.in-ios-app .install-card, html.in-ios-app #a2hs," +
         "html.in-ios-app .google-signin-wrap { display: none !important; }" +
-        "html.in-ios-app .auth-divider { display: block !important; }" +
-        "html.in-ios-app .native-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 320px; margin: 6px auto 0;" +
-        " height: 44px; border: 1px solid #dadce0; border-radius: 22px; background: #fff; color: #3c4043; font: 500 15px/1 Montserrat, system-ui, sans-serif; cursor: pointer; }" +
-        "html.in-ios-app .native-google svg { width: 18px; height: 18px; }" +
+        "html.in-android-app .auth-divider { display: none !important; }" +
+        "html.in-ios .auth-divider { display: block !important; }" +
+        "html.in-ios-app .native-apple { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 320px; margin: 6px auto 0;" +
+        " height: 46px; border: 0; border-radius: 23px; background: #000; color: #fff; font: 600 16px/1 -apple-system, system-ui, sans-serif; cursor: pointer; }" +
+        "html.in-ios-app .native-apple svg { width: 18px; height: 18px; fill: #fff; }" +
+        "html.in-ios-app .native-apple-msg { text-align: center; color: #b3261e; font-size: 14px; margin: 8px 0 0; }" +
         "html.in-ios-app, html.in-ios-app body { -webkit-tap-highlight-color: transparent; }";
-      var GOOGLE_G = '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.7 1.2 9.2 3.6l6.9-6.9C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l8 6.2C12.5 13.7 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.4-4.6 7.1l7.4 5.7c4.3-4 6.9-9.9 6.9-17.3z"/><path fill="#FBBC05" d="M10.6 28.6A14.5 14.5 0 0 1 9.8 24c0-1.6.3-3.1.8-4.6l-8-6.2A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.2 0-11.5-4.2-13.4-9.9l-8 6.2C6.5 42.6 14.6 48 24 48z"/></svg>';
-      var addGoogleButtons = function () {
-        if (location.pathname.indexOf("/login") !== 0) return;
+      var APPLE_LOGO = '<svg viewBox="0 0 24 24"><path d="M16.37 12.77c.03 2.86 2.5 3.81 2.53 3.82-.02.07-.4 1.36-1.3 2.7-.79 1.15-1.6 2.3-2.89 2.33-1.26.02-1.67-.75-3.11-.75s-1.9.72-3.09.77c-1.24.05-2.19-1.25-2.98-2.4C3.9 16.9 2.66 12.6 4.33 9.68c.83-1.45 2.31-2.37 3.92-2.4 1.22-.02 2.37.83 3.11.83.74 0 2.14-1.02 3.61-.87.62.03 2.34.25 3.45 1.88-.09.06-2.06 1.2-2.05 3.65zM14 5.7c.66-.8 1.1-1.9.98-3-.95.04-2.09.63-2.77 1.43-.61.7-1.14 1.83-1 2.91 1.06.08 2.13-.54 2.79-1.34z"/></svg>';
+      var addAppleButtons = function () {
+        if (isAndroid || location.pathname.indexOf("/login") !== 0) return;
         document.querySelectorAll(".google-signin-wrap").forEach(function (wrap) {
-          if (wrap.previousElementSibling && wrap.previousElementSibling.classList.contains("native-google")) return;
+          if (wrap.previousElementSibling && wrap.previousElementSibling.classList.contains("native-apple")) return;
           var b = document.createElement("button");
-          b.type = "button"; b.className = "native-google"; b.innerHTML = GOOGLE_G + "<span>Continue with Google</span>";
-          b.addEventListener("click", function () { post({ action: "googleSignIn" }); });
+          b.type = "button"; b.className = "native-apple"; b.innerHTML = APPLE_LOGO + "<span>Continue with Apple</span>";
+          b.addEventListener("click", function () { post({ action: "haptic", style: "light" }); post({ action: "appleSignIn" }); });
           wrap.parentNode.insertBefore(b, wrap);
         });
       };
-      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", addGoogleButtons); else addGoogleButtons();
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", addAppleButtons); else addAppleButtons();
+      var appleMsg = function (text) {
+        document.querySelectorAll(".native-apple").forEach(function (b) {
+          var m = b.nextElementSibling && b.nextElementSibling.classList.contains("native-apple-msg") ? b.nextElementSibling : null;
+          if (!m) { m = document.createElement("p"); m.className = "native-apple-msg"; b.parentNode.insertBefore(m, b.nextSibling); }
+          m.textContent = text;
+        });
+      };
+      // Native side -> page: Apple's identity token. The page signs in with it and opens the account.
+      window.MDFitNative.appleSignedIn = function (d) {
+        d = d || {};
+        var api = (window.MDFIT_CONFIG && window.MDFIT_CONFIG.apiUrl ? window.MDFIT_CONFIG.apiUrl : location.origin).replace(/[/]+$/, "");
+        var ref = document.querySelector("#signup-form [name=referralCode]");
+        appleMsg("Signing in…");
+        fetch(api + "/api/clients/apple", { method: "POST", headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identityToken: d.identityToken, firstName: d.firstName || "", lastName: d.lastName || "", referralCode: (ref && ref.value) || undefined }) })
+          .then(function (r) { return r.json().then(function (j) { if (!r.ok) throw new Error(j.error || "Apple sign-in failed."); return j; }); })
+          .then(function (sess) {
+            if (window.MDFit && MDFit.auth) MDFit.auth.set(sess); else localStorage.setItem("mdfit_client", JSON.stringify(sess));
+            post({ action: "haptic", style: "success" });
+            location.replace(new URLSearchParams(location.search).get("next") || "/account");
+          })
+          .catch(function (e) { appleMsg(e.message || "Apple sign-in failed. Try again."); });
+      };
+      window.MDFitNative.appleSignInFailed = function () { appleMsg("Apple sign-in didn't finish. Try again, or use your email."); };
       var addStyle = function () {
         var s = document.createElement("style");
         s.textContent = css;

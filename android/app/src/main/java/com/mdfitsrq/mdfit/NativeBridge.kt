@@ -31,7 +31,6 @@ class NativeBridge(private val activity: MainActivity, private val web: WebView)
             }
             "calendar" -> body.optString("ics").takeIf { it.isNotBlank() }?.let { CalendarAdder.present(activity, it) }
             "askNotifications" -> activity.requestNotificationPermission()
-            "googleSignIn" -> activity.openOutsideUrl(android.net.Uri.parse("https://www.mymdfit.com/login?app=1&google=1"))
             "streak" -> Reminders.updateStreakReminder(activity, body.optBoolean("qualifying", true), body.optInt("remaining", 0), body.optInt("streak", 0))
             "open" -> body.optString("url").takeIf { it.startsWith("https://") }?.let {
                 activity.startActivity(Intent(Intent.ACTION_VIEW, android.net.Uri.parse(it)))

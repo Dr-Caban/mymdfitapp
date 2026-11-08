@@ -51,9 +51,9 @@ workflows:
         script: |
           cd MDfitApp
           agvtool new-version -all "$BUILD_NUMBER"
-      - name: Turn on Push Notifications for the App ID and retire stale profiles
-        # The app has the aps-environment entitlement, so the App ID needs the Push Notifications capability and the
-        # provisioning profile must include it. Done through the App Store Connect API with the integration's key,
+      - name: Turn on Push Notifications and Sign in with Apple for the App ID; retire stale profiles
+        # The app's entitlements (push, Sign in with Apple) must be enabled on the App ID and included in the
+        # provisioning profile. Done through the App Store Connect API with the integration's key,
         # so nobody has to click through developer.apple.com. Profiles that no longer match are deleted; the next
         # step then creates a fresh one.
         script: |
@@ -100,18 +100,20 @@ workflows:
           if not match: sys.exit(f"No App ID {bundle} in this team: create it in App Store Connect first.")
           bid = match[0]["id"]
           caps = {c["attributes"]["capabilityType"] for c in ids.get("included", []) if c["type"] == "bundleIdCapabilities"}
-          if "PUSH_NOTIFICATIONS" in caps: print("Push Notifications: already on")
-          else:
-              r = api("POST", "/bundleIdCapabilities", {"data": {"type": "bundleIdCapabilities", "attributes": {"capabilityType": "PUSH_NOTIFICATIONS"},
+          changed = False
+          for cap, label in (("PUSH_NOTIFICATIONS", "Push Notifications"), ("APPLE_ID_AUTH", "Sign in with Apple")):
+              if cap in caps: print(f"{label}: already on"); continue
+              r = api("POST", "/bundleIdCapabilities", {"data": {"type": "bundleIdCapabilities", "attributes": {"capabilityType": cap},
                   "relationships": {"bundleId": {"data": {"type": "bundleIds", "id": bid}}}}})
-              print("Push Notifications:", "turned on" if r else "could not be turned on (see above)")
+              print(f"{label}:", "turned on" if r else "could not be turned on (see above)")
+              if r: changed = True
           # Profiles for this App ID that are no longer valid, or predate the capability (Xcode-managed "XC ..." ones): delete
           profs = api("GET", f"/profiles?filter[profileType]=IOS_APP_STORE&include=bundleId&limit=200") or {}
           for pr in profs.get("data", []):
               rel = ((pr.get("relationships") or {}).get("bundleId") or {}).get("data") or {}
               if rel.get("id") != bid: continue
               name, state = pr["attributes"]["name"], pr["attributes"]["profileState"]
-              if state != "ACTIVE" or name.startswith("XC ") or "PUSH_NOTIFICATIONS" not in caps:
+              if state != "ACTIVE" or name.startswith("XC ") or changed:
                   print(f"deleting profile {name} ({state})"); api("DELETE", f"/profiles/{pr['id']}")
               else: print(f"keeping profile {name} ({state})")
           PY

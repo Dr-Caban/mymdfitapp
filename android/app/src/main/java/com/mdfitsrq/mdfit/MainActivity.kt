@@ -102,13 +102,6 @@ class MainActivity : AppCompatActivity() {
         intent?.getStringExtra("route")?.let { intent.removeExtra("route"); open(it) }
         // App link https://www.mymdfit.com/...
         intent?.data?.let { if (intent.action == Intent.ACTION_VIEW && isSite(it)) { intent.data = null; web.loadUrl(it.toString()) } }
-        // Back from the browser sign-in (Google): mdfit://auth?code=… -> the login page exchanges it for the session
-        intent?.data?.let {
-            if (it.scheme == "mdfit" && it.host == "auth") {
-                val code = it.getQueryParameter("code"); intent.data = null
-                if (!code.isNullOrBlank()) web.loadUrl(Uri.parse("https://www.mymdfit.com/login").buildUpon().appendQueryParameter("handoff", code).build().toString())
-            }
-        }
     }
 
     /** Opens a tab of the member app ("generate", "messages/dr") or Admin ("admin", "admin/messages"). */
@@ -133,8 +126,6 @@ class MainActivity : AppCompatActivity() {
             askNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)
         else Push.refreshToken(this)
     }
-
-    fun openOutsideUrl(url: Uri) = openOutside(url)
 
     private fun openOutside(url: Uri) {
         try {
