@@ -38,13 +38,29 @@ enum BridgeScript {
         navigator.share = function (d) { window.MDFitNative.share(d); return Promise.resolve(); };
       }
 
-      // Hide what doesn't apply inside the app:
-      //  - "Get the app" / Add to Home Screen cards (they're already in the app)
-      //  - Google sign-in: Google blocks sign-in inside apps' web views (email + password works)
+      // Hide what doesn't apply inside the app: "Get the app" / Add to Home Screen cards, and Google's own button
+      // (Google blocks sign-in inside apps' web views). A native "Continue with Google" button takes its place: it
+      // signs in through the phone's browser and hands the session back to the app (see /login?app=1).
       var css =
         "html.in-ios-app .install-card, html.in-ios-app #a2hs," +
-        "html.in-ios-app .google-signin-wrap, html.in-ios-app .auth-divider { display: none !important; }" +
+        "html.in-ios-app .google-signin-wrap { display: none !important; }" +
+        "html.in-ios-app .auth-divider { display: block !important; }" +
+        "html.in-ios-app .native-google { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; max-width: 320px; margin: 6px auto 0;" +
+        " height: 44px; border: 1px solid #dadce0; border-radius: 22px; background: #fff; color: #3c4043; font: 500 15px/1 Montserrat, system-ui, sans-serif; cursor: pointer; }" +
+        "html.in-ios-app .native-google svg { width: 18px; height: 18px; }" +
         "html.in-ios-app, html.in-ios-app body { -webkit-tap-highlight-color: transparent; }";
+      var GOOGLE_G = '<svg viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.7 1.2 9.2 3.6l6.9-6.9C35.9 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l8 6.2C12.5 13.7 17.8 9.5 24 9.5z"/><path fill="#4285F4" d="M46.1 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.4c-.5 2.9-2.2 5.4-4.6 7.1l7.4 5.7c4.3-4 6.9-9.9 6.9-17.3z"/><path fill="#FBBC05" d="M10.6 28.6A14.5 14.5 0 0 1 9.8 24c0-1.6.3-3.1.8-4.6l-8-6.2A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.2 0-11.5-4.2-13.4-9.9l-8 6.2C6.5 42.6 14.6 48 24 48z"/></svg>';
+      var addGoogleButtons = function () {
+        if (location.pathname.indexOf("/login") !== 0) return;
+        document.querySelectorAll(".google-signin-wrap").forEach(function (wrap) {
+          if (wrap.previousElementSibling && wrap.previousElementSibling.classList.contains("native-google")) return;
+          var b = document.createElement("button");
+          b.type = "button"; b.className = "native-google"; b.innerHTML = GOOGLE_G + "<span>Continue with Google</span>";
+          b.addEventListener("click", function () { post({ action: "googleSignIn" }); });
+          wrap.parentNode.insertBefore(b, wrap);
+        });
+      };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", addGoogleButtons); else addGoogleButtons();
       var addStyle = function () {
         var s = document.createElement("style");
         s.textContent = css;

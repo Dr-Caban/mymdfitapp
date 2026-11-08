@@ -40,6 +40,9 @@ final class NativeBridge: NSObject, WKScriptMessageHandler {
                 streak: (body["streak"] as? NSNumber)?.intValue ?? 0
             )
 
+        case "googleSignIn":
+            BrowserSignIn.start(webView: webView)
+
         case "open":
             if let s = body["url"] as? String, let url = URL(string: s) { Presenter.openOutside(url) }
 
