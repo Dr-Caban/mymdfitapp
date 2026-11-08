@@ -9,7 +9,11 @@
 #       role "App Manager"; copy Issuer ID + Key ID and upload the .p8, which Apple only shows once.)
 #   2. The App Store Connect app record must use bundle id com.mdfitsrq.MDfit (or change it here AND in
 #      MDfitApp/project.yml before building).
-#   3. Push to main or press "Start new build". First build takes ~15–20 min.
+#   3. Codemagic → the app → Environment variables: add CERTIFICATE_PRIVATE_KEY (group "signing", Secure ticked).
+#      Its value is an RSA private key that becomes the signing certificate's key. Make it once on any Mac:
+#        ssh-keygen -t rsa -b 2048 -m PEM -f ~/Desktop/mdfit_cert_key -q -N ""
+#      then paste the CONTENTS of ~/Desktop/mdfit_cert_key (the file without .pub) as the value. Keep the file.
+#   4. Push to main or press "Start new build". First build takes ~15–20 min.
 workflows:
   ios-testflight:
     name: iOS → TestFlight
@@ -19,10 +23,10 @@ workflows:
       app_store_connect: MDfit
     environment:
       xcode: latest
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: com.mdfitsrq.MDfit
+      groups:
+        - signing                       # holds CERTIFICATE_PRIVATE_KEY (see step 3 above)
       vars:
+        BUNDLE_ID: "com.mdfitsrq.MDfit"
         XCODE_PROJECT: "MDfitApp/MDfit.xcodeproj"
         XCODE_SCHEME: "MDfit"
     triggering:
@@ -46,7 +50,16 @@ workflows:
         script: |
           cd MDfitApp
           agvtool new-version -all "$BUILD_NUMBER"
-      - name: Set up code signing
+      - name: Fetch or create the signing certificate and App Store profile
+        # Uses the App Store Connect key from the MDfit integration (APP_STORE_CONNECT_* are set by Codemagic).
+        # --create makes an Apple Distribution certificate and an App Store profile for the bundle id when none exist.
+        script: |
+          app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create
+      - name: Add the certificate to the keychain
+        script: |
+          keychain initialize
+          keychain add-certificates
+      - name: Point the Xcode project at the fetched profile
         script: |
           xcode-project use-profiles --project "$XCODE_PROJECT"
       - name: Build the .ipa
