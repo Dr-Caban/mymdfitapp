@@ -103,7 +103,7 @@ workflows:
     publishing:
       app_store_connect:
         auth: integration
-        submit_to_testflight: true
+        submit_to_testflight: false   # true also submits for external beta review; needs Test Information filled in App Store Connect first
         # beta_groups: ["MD Fit testers"]   # add once a TestFlight group exists to auto-distribute each build
       email:
         recipients:
