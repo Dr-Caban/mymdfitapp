@@ -16,3 +16,10 @@ MDfitApp/.build/
 assets/
 *.mp4.icloud
 *.icloud
+
+# Xcode project is generated from MDfitApp/project.yml (xcodegen generate); user state never belongs in git
+MDfitApp/MDfit.xcodeproj/
+MDfitApp/*.xcworkspace/
+MDfitApp/.swiftpm/
+**/xcuserdata/
+*.xcuserstate
