@@ -1,0 +1,8 @@
+Version 1.0 - Initial Release
+
+- Pain Tool: Interactive body map to find exercises for your trouble spots
+- Video Library: 40+ professional exercise videos with filters
+- Workout Generator: Create custom workouts based on your goals
+- Programs: Structured training for golf, running, skiing, and more
+- Progress Tracking: Streaks, achievements, and workout history
+- Dark mode design throughout

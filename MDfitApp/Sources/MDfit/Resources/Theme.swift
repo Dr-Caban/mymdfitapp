@@ -1,226 +1,254 @@
 import SwiftUI
 
-// MARK: - MD Fit Brand Colors (from Workout Generator screenshot)
+// MARK: - MD Fit Design System
+// Exact tokens from mdfit-frontend/styles.css
+
+// MARK: - Brand Colors (from CSS :root)
 
 extension Color {
-    // Primary blue - headers, nav, backgrounds
-    static let mdBlue = Color(red: 0.0, green: 0.322, blue: 0.647)          // #0052A5
-    static let mdBlueDark = Color(red: 0.0, green: 0.2, blue: 0.4)          // #003366
-    static let mdBlueLight = Color(red: 0.2, green: 0.5, blue: 0.8)         // #3380CC
+    // Brand navy - primary dark color
+    static let mdInk = Color(hex: "0A1A2E")
+    static let mdInk2 = Color(hex: "10233b")
+    static let mdInk3 = Color(hex: "1d3352")
 
-    // Gold/Orange accent - CTAs, selected states
-    static let mdGold = Color(red: 0.831, green: 0.659, blue: 0.294)        // #D4A84B
-    static let mdOrange = Color(red: 1.0, green: 0.478, blue: 0.0)          // #FF7A00
+    // Brand cream background
+    static let mdCream = Color(hex: "F6F4EE")
 
-    // Neutrals
-    static let mdWhite = Color.white
-    static let mdGray = Color(red: 0.541, green: 0.541, blue: 0.541)        // #8A8A8A
-    static let mdGrayLight = Color(red: 0.9, green: 0.9, blue: 0.92)
-    static let mdDark = Color(red: 0.102, green: 0.102, blue: 0.180)        // #1A1A2E
+    // Card backgrounds
+    static let mdPaper = Color(hex: "FFFFFF")
+    static let mdPaper2 = Color(hex: "EFEBE1")
+
+    // Border color
+    static let mdLine = Color(hex: "e4ded1")
+
+    // Text colors
+    static let mdText = Color(hex: "424244")
+    static let mdHeading = Color(hex: "0A1A2E")
+    static let mdMuted = Color(hex: "6b6a6e")
+
+    // Accent blue
+    static let mdAccent = Color(hex: "7AAFD7")
+    static let mdAccentHover = Color(hex: "6AA2CD")
+    static let mdAccentInk = Color(hex: "0A1A2E")
+    static let mdAccentText = Color(hex: "2F6E9E")
+    static let mdAccentBright = Color(hex: "8EC0E6")
+    static let mdAccentSoft = Color(hex: "EAF3FA")
+
+    // Brand gold
+    static let mdGold = Color(hex: "C8A763")
+    static let mdGoldSoft = Color(hex: "FBF3E3")
 
     // Status colors
-    static let mdSuccess = Color(red: 0.2, green: 0.78, blue: 0.35)
-    static let mdWarning = Color(red: 1.0, green: 0.76, blue: 0.03)
-    static let mdError = Color(red: 0.94, green: 0.27, blue: 0.27)
+    static let mdOk = Color(hex: "2e7d4f")
+    static let mdErr = Color(hex: "c62828")
+
+    // Text on navy backgrounds
+    static let mdOnNavy = Color.white.opacity(0.7)
+
+    // Legacy aliases
+    static let mdBlue = Color(hex: "2F6E9E")
+    static let mdDark = Color(hex: "0A1A2E")
+    static let mdBackground = Color(hex: "F6F4EE")
+    static let mdGray = Color(hex: "6b6a6e")
+    static let mdBlueDark = Color(hex: "0A1A2E")
+    static let mdSuccess = Color(hex: "2e7d4f")
+    static let mdBlueLight = Color(hex: "7AAFD7")
+
+    // Hex initializer
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int: UInt64 = 0
+        Scanner(string: hex).scanHexInt64(&int)
+        let a, r, g, b: UInt64
+        switch hex.count {
+        case 3:
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6:
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8:
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (1, 1, 1, 0)
+        }
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: Double(a) / 255
+        )
+    }
 }
 
-// MARK: - Gradients
+// MARK: - Design Constants
 
-extension LinearGradient {
-    static let mdHeader = LinearGradient(
-        colors: [Color.mdBlueDark, Color.mdBlue],
-        startPoint: .topLeading,
-        endPoint: .bottomTrailing
-    )
+enum MDTheme {
+    // Corner radius (14px from CSS)
+    static let radius: CGFloat = 14
+    static let radiusSmall: CGFloat = 10
+    static let radiusLarge: CGFloat = 20
 
-    static let mdBackground = LinearGradient(
-        colors: [Color.mdBlue.opacity(0.95), Color.mdBlueDark],
-        startPoint: .top,
-        endPoint: .bottom
-    )
+    // Padding
+    static let cardPadding: CGFloat = 22
+    static let sectionPadding: CGFloat = 16
+
+    // Shadow
+    static let shadowColor = Color(hex: "0A1A2E").opacity(0.28)
+    static let shadowRadius: CGFloat = 15
+    static let shadowY: CGFloat = 6
 }
 
-// MARK: - Typography
+// MARK: - Typography (Libre Baskerville for display, Montserrat for body)
 
 extension Font {
-    // Large title - 34pt bold
-    static let mdLargeTitle = Font.system(size: 34, weight: .bold)
+    // Display font (serif for headings)
+    static func mdDisplay(_ size: CGFloat, weight: Font.Weight = .bold) -> Font {
+        .custom("Georgia", size: size).weight(weight)
+    }
 
-    // Title - 28pt bold
-    static let mdTitle = Font.system(size: 28, weight: .bold)
+    // Body font (sans-serif)
+    static func mdBody(_ size: CGFloat, weight: Font.Weight = .regular) -> Font {
+        .system(size: size, weight: weight)
+    }
 
-    // Title 2 - 22pt bold
-    static let mdTitle2 = Font.system(size: 22, weight: .bold)
+    // Heading sizes
+    static let mdH1 = Font.custom("Georgia", size: 34).weight(.bold)
+    static let mdH2 = Font.custom("Georgia", size: 22).weight(.bold)
+    static let mdH3 = Font.custom("Georgia", size: 16).weight(.bold)
 
-    // Section header - 14pt bold uppercase
-    static let mdSectionHeader = Font.system(size: 14, weight: .bold)
-
-    // Headline - 17pt semibold
-    static let mdHeadline = Font.system(size: 17, weight: .semibold)
-
-    // Body - 17pt regular
-    static let mdBody = Font.system(size: 17, weight: .regular)
-
-    // Subheadline - 15pt regular
-    static let mdSubheadline = Font.system(size: 15, weight: .regular)
-
-    // Caption - 12pt regular
+    // Body sizes
+    static let mdBodyLarge = Font.system(size: 17, weight: .regular)
+    static let mdBodyMedium = Font.system(size: 15, weight: .regular)
+    static let mdBodySmall = Font.system(size: 14, weight: .regular)
     static let mdCaption = Font.system(size: 12, weight: .regular)
 
-    // Small - 11pt
-    static let mdSmall = Font.system(size: 11, weight: .regular)
+    // Eyebrow/Label
+    static let mdEyebrow = Font.system(size: 12, weight: .bold)
+
+    // Legacy fonts
+    static let mdTitle = Font.custom("Georgia", size: 28).weight(.bold)
+    static let mdSubheadline = Font.system(size: 15, weight: .regular)
+}
+
+// MARK: - Card Styles
+
+struct MDCard<Content: View>: View {
+    let content: Content
+    var padding: CGFloat = 22
+
+    init(padding: CGFloat = 22, @ViewBuilder content: () -> Content) {
+        self.padding = padding
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(padding)
+            .background(Color.mdPaper)
+            .cornerRadius(MDTheme.radius)
+            .overlay(
+                RoundedRectangle(cornerRadius: MDTheme.radius)
+                    .stroke(Color.mdLine, lineWidth: 1)
+            )
+    }
+}
+
+struct MDNavyCard<Content: View>: View {
+    let content: Content
+    var padding: CGFloat = 22
+
+    init(padding: CGFloat = 22, @ViewBuilder content: () -> Content) {
+        self.padding = padding
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(padding)
+            .background(Color.mdInk)
+            .cornerRadius(MDTheme.radius)
+    }
+}
+
+struct MDGoldCard<Content: View>: View {
+    let content: Content
+    var padding: CGFloat = 22
+
+    init(padding: CGFloat = 22, @ViewBuilder content: () -> Content) {
+        self.padding = padding
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(padding)
+            .background(Color.mdGoldSoft)
+            .cornerRadius(MDTheme.radius)
+            .overlay(
+                RoundedRectangle(cornerRadius: MDTheme.radius)
+                    .stroke(Color(hex: "e6d5ad"), lineWidth: 1)
+            )
+    }
 }
 
 // MARK: - Button Styles
 
-struct MDPrimaryButtonStyle: ButtonStyle {
-    var isFullWidth: Bool = true
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 16, weight: .bold))
-            .foregroundColor(.mdBlueDark)
-            .frame(maxWidth: isFullWidth ? .infinity : nil)
-            .padding(.vertical, 16)
-            .padding(.horizontal, 24)
-            .background(Color.mdGold)
-            .cornerRadius(8)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-    }
-}
-
-struct MDSecondaryButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(.system(size: 14, weight: .semibold))
-            .foregroundColor(.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 14)
-            .background(Color.white.opacity(0.1))
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.white.opacity(0.3), lineWidth: 1)
-            )
-            .cornerRadius(8)
-            .opacity(configuration.isPressed ? 0.8 : 1.0)
-    }
-}
-
-extension ButtonStyle where Self == MDPrimaryButtonStyle {
-    static var mdPrimary: MDPrimaryButtonStyle { MDPrimaryButtonStyle() }
-}
-
-extension ButtonStyle where Self == MDSecondaryButtonStyle {
-    static var mdSecondary: MDSecondaryButtonStyle { MDSecondaryButtonStyle() }
-}
-
-// MARK: - Selection Chip Style (for generator options)
-
-struct SelectionChip: View {
+struct MDPrimaryButton: View {
     let title: String
-    let subtitle: String?
-    let icon: String?
-    let isSelected: Bool
     let action: () -> Void
-
-    init(
-        title: String,
-        subtitle: String? = nil,
-        icon: String? = nil,
-        isSelected: Bool,
-        action: @escaping () -> Void
-    ) {
-        self.title = title
-        self.subtitle = subtitle
-        self.icon = icon
-        self.isSelected = isSelected
-        self.action = action
-    }
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 4) {
-                if let icon = icon {
-                    Image(systemName: icon)
-                        .font(.system(size: 20))
-                }
-                Text(title)
-                    .font(.system(size: 13, weight: .semibold))
-                if let subtitle = subtitle {
-                    Text(subtitle)
-                        .font(.system(size: 10))
-                        .opacity(0.8)
-                }
-            }
-            .foregroundColor(isSelected ? .mdBlueDark : .white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .padding(.horizontal, 8)
-            .background(isSelected ? Color.mdGold : Color.white.opacity(0.1))
-            .cornerRadius(8)
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(isSelected ? Color.mdGold : Color.white.opacity(0.2), lineWidth: 1)
-            )
+            Text(title)
+                .font(.system(size: 15, weight: .bold))
+                .foregroundColor(.mdAccentInk)
+                .padding(.horizontal, 22)
+                .padding(.vertical, 12)
+                .background(Color.mdAccent)
+                .cornerRadius(999)
         }
     }
 }
 
-// MARK: - Number Chip (for exercises per round, rounds, etc.)
-
-struct NumberChip: View {
-    let value: Int
-    let label: String?
-    let isSelected: Bool
+struct MDSecondaryButton: View {
+    let title: String
     let action: () -> Void
-
-    init(value: Int, label: String? = nil, isSelected: Bool, action: @escaping () -> Void) {
-        self.value = value
-        self.label = label
-        self.isSelected = isSelected
-        self.action = action
-    }
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 2) {
-                Text("\(value)")
-                    .font(.system(size: 16, weight: .bold))
-                if let label = label {
-                    Text(label)
-                        .font(.system(size: 9))
-                }
-            }
-            .foregroundColor(isSelected ? .mdBlueDark : .white)
-            .frame(width: 44, height: 44)
-            .background(isSelected ? Color.mdGold : Color.white.opacity(0.1))
-            .cornerRadius(8)
+            Text(title)
+                .font(.system(size: 15, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 22)
+                .padding(.vertical, 12)
+                .background(Color.mdInk)
+                .cornerRadius(999)
         }
     }
 }
 
-// MARK: - Card Style
+struct MDOutlineButton: View {
+    let title: String
+    let action: () -> Void
 
-struct MDCardModifier: ViewModifier {
-    var backgroundColor: Color = Color(.systemBackground)
-
-    func body(content: Content) -> some View {
-        content
-            .padding(16)
-            .background(backgroundColor)
-            .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 2)
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundColor(.mdText)
+                .padding(.horizontal, 22)
+                .padding(.vertical, 12)
+                .background(Color.clear)
+                .cornerRadius(999)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 999)
+                        .stroke(Color.mdLine, lineWidth: 1.5)
+                )
+        }
     }
 }
 
-extension View {
-    func mdCard(backgroundColor: Color = Color(.systemBackground)) -> some View {
-        modifier(MDCardModifier(backgroundColor: backgroundColor))
-    }
-}
-
-// MARK: - Section Header
+// MARK: - Section Header with Number Badge
 
 struct MDSectionHeader: View {
     let number: Int?
@@ -234,26 +262,26 @@ struct MDSectionHeader: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(spacing: 10) {
             if let number = number {
                 Text("\(number)")
                     .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.mdBlueDark)
+                    .foregroundColor(.white)
                     .frame(width: 28, height: 28)
-                    .background(Color.mdGold)
+                    .background(Color.mdInk)
                     .clipShape(Circle())
             }
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(title.uppercased())
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(.white)
-                    .tracking(1)
+                    .font(.mdEyebrow)
+                    .foregroundColor(.mdHeading)
+                    .tracking(1.2)
 
                 if let subtitle = subtitle {
                     Text(subtitle)
-                        .font(.system(size: 11))
-                        .foregroundColor(.white.opacity(0.7))
+                        .font(.mdCaption)
+                        .foregroundColor(.mdMuted)
                 }
             }
 
@@ -262,29 +290,448 @@ struct MDSectionHeader: View {
     }
 }
 
-// MARK: - Toggle Row
+// MARK: - Eyebrow Label (uppercase tracking)
 
-struct MDToggleRow: View {
-    let icon: String
-    let title: String
-    @Binding var isOn: Bool
+struct MDEyebrow: View {
+    let text: String
+    var color: Color = .mdAccentText
 
     var body: some View {
-        HStack {
+        Text(text.uppercased())
+            .font(.system(size: 12.5, weight: .bold))
+            .foregroundColor(color)
+            .tracking(2)
+    }
+}
+
+// MARK: - Hero Header Card (navy background with radial gradient)
+
+struct MDHeroCard<Content: View>: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(22)
+            .background(
+                ZStack {
+                    Color.mdInk
+                    RadialGradient(
+                        colors: [Color.mdAccent.opacity(0.16), .clear],
+                        center: .topTrailing,
+                        startRadius: 0,
+                        endRadius: 400
+                    )
+                }
+            )
+            .cornerRadius(MDTheme.radius)
+    }
+}
+
+// MARK: - XP/Gem Badge
+
+struct MDGemBadge: View {
+    let gemName: String
+    let xp: Int
+    let rank: Int?
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text(gemName)
+                .font(.system(size: 13, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(Color.mdInk)
+                .cornerRadius(999)
+
+            Text("\(xp) XP")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.white)
+
+            if let rank = rank {
+                Spacer()
+                Text("#\(rank)")
+                    .font(.mdDisplay(18, weight: .bold))
+                    .foregroundColor(.mdGold)
+                Text("OVERALL")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(.white.opacity(0.7))
+                    .tracking(1)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(Color.mdInk.opacity(0.9))
+        .cornerRadius(MDTheme.radius)
+    }
+}
+
+// MARK: - Search Bar
+
+struct MDSearchBar: View {
+    @Binding var text: String
+    var placeholder: String = "What hurts? Search anything"
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.mdMuted)
+
+            TextField(placeholder, text: $text)
+                .font(.mdBodyMedium)
+                .foregroundColor(.mdText)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .background(Color.mdPaper)
+        .cornerRadius(MDTheme.radius)
+        .overlay(
+            RoundedRectangle(cornerRadius: MDTheme.radius)
+                .stroke(Color.mdLine, lineWidth: 1)
+        )
+    }
+}
+
+// MARK: - Tab Bar Item
+
+struct MDTabItem: View {
+    let icon: String
+    let title: String
+    let isSelected: Bool
+
+    var body: some View {
+        VStack(spacing: 4) {
             Image(systemName: icon)
-                .foregroundColor(.mdGold)
-                .frame(width: 24)
+                .font(.system(size: 22))
+                .foregroundColor(isSelected ? .mdAccentBright : .white.opacity(0.6))
 
             Text(title)
-                .font(.system(size: 14))
-                .foregroundColor(.white)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(isSelected ? .mdAccentBright : .white.opacity(0.6))
+        }
+    }
+}
+
+// MARK: - Appointment Row (from account.css)
+
+struct MDAppointmentRow: View {
+    let month: String
+    let day: Int
+    let title: String
+    let time: String
+    let duration: String
+
+    var body: some View {
+        HStack(spacing: 14) {
+            // Date badge
+            VStack(spacing: 0) {
+                Text(month.uppercased())
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(.mdGold)
+                    .tracking(1)
+                Text("\(day)")
+                    .font(.mdDisplay(20, weight: .bold))
+                    .foregroundColor(.white)
+            }
+            .frame(width: 52)
+            .padding(.vertical, 6)
+            .background(Color.mdInk)
+            .cornerRadius(10)
+
+            // Info
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 14.5, weight: .semibold))
+                    .foregroundColor(.mdHeading)
+
+                Text("\(time) · \(duration)")
+                    .font(.system(size: 13))
+                    .foregroundColor(.mdMuted)
+
+                HStack(spacing: 14) {
+                    Button("Cancel") {}
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.mdErr)
+
+                    Button("Add to calendar") {}
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.mdAccentText)
+                }
+                .padding(.top, 4)
+            }
+
+            Spacer()
+        }
+        .padding(10)
+        .background(Color.mdPaper)
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.mdLine, lineWidth: 1)
+        )
+    }
+}
+
+// MARK: - Workout History Row
+
+struct MDWorkoutRow: View {
+    let title: String
+    let duration: String
+    let exercises: Int
+    let date: String
+    let isCompleted: Bool
+
+    var body: some View {
+        HStack(spacing: 14) {
+            // Checkmark circle
+            Circle()
+                .fill(isCompleted ? Color.mdAccentSoft : Color.mdPaper2)
+                .frame(width: 44, height: 44)
+                .overlay(
+                    Image(systemName: isCompleted ? "checkmark" : "dumbbell.fill")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(isCompleted ? .mdAccentText : .mdMuted)
+                )
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.mdHeading)
+
+                Text("\(duration) · \(exercises) exercises")
+                    .font(.system(size: 13))
+                    .foregroundColor(.mdMuted)
+            }
 
             Spacer()
 
-            Toggle("", isOn: $isOn)
-                .labelsHidden()
-                .tint(.mdGold)
+            Text(date)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.mdAccentText)
         }
-        .padding(.vertical, 8)
     }
+}
+
+// MARK: - Progress Bar
+
+struct MDProgressBar: View {
+    let progress: Double
+    var height: CGFloat = 10
+    var backgroundColor: Color = .mdAccentSoft
+    var foregroundColor: Color = .mdGold
+
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                RoundedRectangle(cornerRadius: height / 2)
+                    .fill(backgroundColor)
+
+                RoundedRectangle(cornerRadius: height / 2)
+                    .fill(foregroundColor)
+                    .frame(width: geometry.size.width * min(progress, 1.0))
+            }
+        }
+        .frame(height: height)
+    }
+}
+
+// MARK: - Calendar Day Cell
+
+struct MDCalendarDay: View {
+    let day: Int
+    let isToday: Bool
+    let hasWorkout: Bool
+    let hasVisit: Bool
+    let hasPainLog: Bool
+
+    var body: some View {
+        ZStack {
+            if hasWorkout {
+                Circle()
+                    .fill(Color.mdGold)
+            } else if isToday {
+                Circle()
+                    .stroke(Color.mdAccent, lineWidth: 2)
+            } else {
+                Circle()
+                    .fill(Color.mdPaper)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 999)
+                            .stroke(Color.mdLine, lineWidth: 1)
+                    )
+            }
+
+            Text("\(day)")
+                .font(.system(size: 12, weight: .medium))
+                .foregroundColor(hasWorkout ? .mdInk : .mdText)
+        }
+        .frame(width: 32, height: 32)
+    }
+}
+
+// MARK: - Menu Row (More sheet)
+
+struct MDMenuRow: View {
+    let icon: String
+    let title: String
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(.mdAccentText)
+                    .frame(width: 24)
+
+                Text(title)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.mdHeading)
+
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(Color.mdPaper2)
+            .cornerRadius(12)
+        }
+    }
+}
+
+// MARK: - Logo
+
+struct MDFitLogo: View {
+    var height: CGFloat = 62
+
+    var body: some View {
+        Image("MDFitLogo")
+            .resizable()
+            .scaledToFit()
+            .frame(height: height)
+    }
+}
+
+// MARK: - View Extensions
+
+extension View {
+    func mdCardStyle(padding: CGFloat = 22) -> some View {
+        self
+            .padding(padding)
+            .background(Color.mdPaper)
+            .cornerRadius(MDTheme.radius)
+            .overlay(
+                RoundedRectangle(cornerRadius: MDTheme.radius)
+                    .stroke(Color.mdLine, lineWidth: 1)
+            )
+    }
+
+    func mdNavyCardStyle(padding: CGFloat = 22) -> some View {
+        self
+            .padding(padding)
+            .background(Color.mdInk)
+            .cornerRadius(MDTheme.radius)
+    }
+
+    func mdGoldCardStyle(padding: CGFloat = 22) -> some View {
+        self
+            .padding(padding)
+            .background(Color.mdGoldSoft)
+            .cornerRadius(MDTheme.radius)
+            .overlay(
+                RoundedRectangle(cornerRadius: MDTheme.radius)
+                    .stroke(Color(hex: "e6d5ad"), lineWidth: 1)
+            )
+    }
+
+    func mdShadow() -> some View {
+        self.shadow(
+            color: MDTheme.shadowColor,
+            radius: MDTheme.shadowRadius,
+            x: 0,
+            y: MDTheme.shadowY
+        )
+    }
+}
+
+// MARK: - Button Styles
+
+struct MDPrimaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 16, weight: .bold))
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 15)
+            .background(Color.mdInk)
+            .cornerRadius(12)
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+    }
+}
+
+struct MDSecondaryButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 16, weight: .semibold))
+            .foregroundColor(.mdInk)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 15)
+            .background(Color.mdPaper)
+            .cornerRadius(12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(Color.mdLine, lineWidth: 1)
+            )
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+    }
+}
+
+struct MDGoldButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 16, weight: .bold))
+            .foregroundColor(.mdInk)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 15)
+            .background(Color.mdGold)
+            .cornerRadius(12)
+            .opacity(configuration.isPressed ? 0.8 : 1.0)
+    }
+}
+
+extension ButtonStyle where Self == MDPrimaryButtonStyle {
+    static var mdPrimary: MDPrimaryButtonStyle { MDPrimaryButtonStyle() }
+}
+
+extension ButtonStyle where Self == MDSecondaryButtonStyle {
+    static var mdSecondary: MDSecondaryButtonStyle { MDSecondaryButtonStyle() }
+}
+
+extension ButtonStyle where Self == MDGoldButtonStyle {
+    static var mdGold: MDGoldButtonStyle { MDGoldButtonStyle() }
+}
+
+// MARK: - Gradient Extensions
+
+extension LinearGradient {
+    static let mdDarkBackground = LinearGradient(
+        colors: [Color.mdInk, Color.mdInk2],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+
+    static let mdBackground = LinearGradient(
+        colors: [Color.mdCream, Color.mdCream],
+        startPoint: .top,
+        endPoint: .bottom
+    )
+
+    static let mdGoldGradient = LinearGradient(
+        colors: [Color.mdGold, Color(hex: "e9d39f")],
+        startPoint: .leading,
+        endPoint: .trailing
+    )
 }

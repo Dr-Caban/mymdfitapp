@@ -41,10 +41,28 @@ struct Workout: Identifiable, Codable, Hashable {
 
 // MARK: - Workout Goal Type
 
+// MARK: - Session Type
+
+enum SessionType: String, Codable, CaseIterable, Hashable {
+    case workout
+    case rehab
+
+    var displayName: String {
+        switch self {
+        case .workout: return "Workout"
+        case .rehab: return "Rehab"
+        }
+    }
+}
+
+// MARK: - Workout Goal Type
+
 enum WorkoutGoalType: String, Codable, CaseIterable, Hashable {
     case upperBody = "upper_body"
     case lowerBody = "lower_body"
     case fullBody = "full_body"
+    case core
+    case mobility
     case cardio
     case environmental              // Swim, Run, Bike
 
@@ -53,6 +71,8 @@ enum WorkoutGoalType: String, Codable, CaseIterable, Hashable {
         case .upperBody: return "Upper Body"
         case .lowerBody: return "Lower Body"
         case .fullBody: return "Full Body"
+        case .core: return "Core & Spine"
+        case .mobility: return "Mobility & Recovery"
         case .cardio: return "Cardio"
         case .environmental: return "Environmental"
         }
@@ -68,8 +88,10 @@ enum WorkoutGoalType: String, Codable, CaseIterable, Hashable {
     var icon: String {
         switch self {
         case .upperBody: return "figure.arms.open"
-        case .lowerBody: return "figure.run"
+        case .lowerBody: return "figure.walk"
         case .fullBody: return "figure.mixed.cardio"
+        case .core: return "figure.core.training"
+        case .mobility: return "figure.flexibility"
         case .cardio: return "heart.fill"
         case .environmental: return "leaf.fill"
         }
@@ -82,11 +104,15 @@ enum WorkoutLocation: String, Codable, CaseIterable, Hashable {
     case home
     case gym
     case outdoor
+    case office
     case pool
     case custom
 
     var displayName: String {
-        rawValue.capitalized
+        switch self {
+        case .office: return "Office / Desk"
+        default: return rawValue.capitalized
+        }
     }
 
     var icon: String {
@@ -94,6 +120,7 @@ enum WorkoutLocation: String, Codable, CaseIterable, Hashable {
         case .home: return "house.fill"
         case .gym: return "dumbbell.fill"
         case .outdoor: return "sun.max.fill"
+        case .office: return "desktopcomputer"
         case .pool: return "figure.pool.swim"
         case .custom: return "mappin.circle.fill"
         }
@@ -109,6 +136,7 @@ struct WorkoutAddOns: Codable, Hashable {
     var coreWork: Bool = false
     var balanceStability: Bool = false
     var sportSpecific: Bool = false
+    var noEquipment: Bool = false
     var equipmentRestrictions: Bool = false
     var restrictedEquipment: [Equipment]? = nil
 }
@@ -133,12 +161,13 @@ struct WorkoutExercise: Identifiable, Codable, Hashable {
 // MARK: - Generator Settings (for UI state)
 
 struct WorkoutGeneratorSettings: Codable, Hashable {
+    var sessionType: SessionType = .workout
     var goalType: WorkoutGoalType = .fullBody
     var location: WorkoutLocation = .home
     var difficulty: DifficultyLevel = .intermediate
-    var lengthMinutes: Int = 60
-    var exercisesPerRound: Int = 5
-    var totalRounds: Int = 2
+    var lengthMinutes: Int = 45
+    var exercisesPerRound: Int = 10
+    var totalRounds: Int = 6
     var restBetweenExercises: Int = 0
     var restBetweenRounds: Int = 0
     var addOns: WorkoutAddOns = WorkoutAddOns()
@@ -150,6 +179,7 @@ struct WorkoutGeneratorSettings: Codable, Hashable {
     static let restOptions = [0, 15, 30, 45, 60, 90, 120, 180]
 
     mutating func randomize() {
+        sessionType = Bool.random() ? .workout : .rehab
         goalType = WorkoutGoalType.allCases.randomElement() ?? .fullBody
         location = WorkoutLocation.allCases.randomElement() ?? .home
         difficulty = DifficultyLevel.allCases.randomElement() ?? .intermediate

@@ -1,4 +1,5 @@
 import Foundation
+import CoreGraphics
 
 // MARK: - Pain Pattern (for Pain Tool)
 
@@ -29,6 +30,23 @@ struct BodyMapSelection: Codable, Hashable {
     enum BodyView: String, Codable, Hashable {
         case front
         case back
+    }
+
+    // Custom Hashable conformance since CGPoint is not Hashable
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(view)
+        hasher.combine(region)
+        if let point = specificPoint {
+            hasher.combine(point.x)
+            hasher.combine(point.y)
+        }
+    }
+
+    static func == (lhs: BodyMapSelection, rhs: BodyMapSelection) -> Bool {
+        lhs.view == rhs.view &&
+        lhs.region == rhs.region &&
+        lhs.specificPoint?.x == rhs.specificPoint?.x &&
+        lhs.specificPoint?.y == rhs.specificPoint?.y
     }
 }
 

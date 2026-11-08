@@ -1,0 +1,721 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-10-27T00:00:00Z",
+  "description": "MD Fit program library - Dr. Jared can edit this file to manage training programs",
+  "programs": [
+    {
+      "id": "prog_running_beginner_8wk",
+      "name": "8-Week Running: Beginner",
+      "description": "Build proper running mechanics from the ground up. Focus on midfoot landing, glute activation, trunk rotation, and efficient form. Perfect for new runners or those returning after a break.",
+      "category": "running",
+      "difficulty": "beginner",
+      "duration_weeks": 8,
+      "thumbnail_url": null,
+      "price": null,
+      "is_premium": true,
+      "is_published": true,
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z",
+      "weeks": [
+        {
+          "id": "prog_running_beginner_8wk_w1",
+          "week_number": 1,
+          "name": "Foundation Week",
+          "days": [
+            {
+              "id": "prog_running_beginner_8wk_w1_d1",
+              "day_number": 1,
+              "day_of_week": "monday",
+              "name": "Mobility & Activation",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": "Focus on proper form over speed",
+              "exercises": [
+                {
+                  "id": "we_001",
+                  "exercise_id": "ex_001",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 1,
+                    "reps": 10,
+                    "intensity": "gentle"
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_002",
+                  "exercise_id": "HP_RT_9090_HIP_SWITCH_MOB",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 8,
+                    "intensity": "moderate"
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_003",
+                  "exercise_id": "HP_AB_STANDING_HIPABAD_MOB",
+                  "round_number": 1,
+                  "order_in_round": 3,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 30
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_running_beginner_8wk_w1_d2",
+              "day_number": 2,
+              "day_of_week": "tuesday",
+              "name": "Rest Day",
+              "workout_id": null,
+              "is_rest_day": true,
+              "is_freeform_activity": false,
+              "notes": "Light walking encouraged",
+              "exercises": []
+            },
+            {
+              "id": "prog_running_beginner_8wk_w1_d3",
+              "day_number": 3,
+              "day_of_week": "wednesday",
+              "name": "Strength & Form",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": [
+                {
+                  "id": "we_004",
+                  "exercise_id": "CO_CO_DEAD_BUG_STR",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 30
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_005",
+                  "exercise_id": "FB_SQ_GOBLET_SQUAT_STR",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 45
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_running_beginner_8wk_w1_d4",
+              "day_number": 4,
+              "day_of_week": "thursday",
+              "name": "Rest Day",
+              "workout_id": null,
+              "is_rest_day": true,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": []
+            },
+            {
+              "id": "prog_running_beginner_8wk_w1_d5",
+              "day_number": 5,
+              "day_of_week": "friday",
+              "name": "Run Prep + Easy Run",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": true,
+              "notes": "15-20 minute easy jog/walk intervals",
+              "exercises": [
+                {
+                  "id": "we_006",
+                  "exercise_id": "FB_CW_JUMPING_JACKS_WU",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "duration": 60,
+                    "intensity": "moderate"
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_running_beginner_8wk_w1_d6",
+              "day_number": 6,
+              "day_of_week": "saturday",
+              "name": "Active Recovery",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": true,
+              "notes": "Light walking, swimming, or yoga",
+              "exercises": []
+            },
+            {
+              "id": "prog_running_beginner_8wk_w1_d7",
+              "day_number": 7,
+              "day_of_week": "sunday",
+              "name": "Rest Day",
+              "workout_id": null,
+              "is_rest_day": true,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": []
+            }
+          ]
+        },
+        {
+          "id": "prog_running_beginner_8wk_w2",
+          "week_number": 2,
+          "name": "Building Consistency",
+          "days": [
+            {
+              "id": "prog_running_beginner_8wk_w2_d1",
+              "day_number": 1,
+              "day_of_week": "monday",
+              "name": "Mobility & Strength",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": [
+                {
+                  "id": "we_007",
+                  "exercise_id": "SP_RT_THREAD_THE_NEEDLE_MOB",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 8
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_008",
+                  "exercise_id": "HP_HN_ROMANIAN_DEADLIFT_STR",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 60
+                  },
+                  "is_completed": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prog_golf_rotational_6wk",
+      "name": "Golf Rotational Power",
+      "description": "Develop explosive rotational power for a more powerful swing. Includes cable rotations, medicine ball work, and mobility drills specific to the golf swing.",
+      "category": "golf",
+      "difficulty": "intermediate",
+      "duration_weeks": 6,
+      "thumbnail_url": null,
+      "price": 49.99,
+      "is_premium": true,
+      "is_published": true,
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z",
+      "weeks": [
+        {
+          "id": "prog_golf_rotational_6wk_w1",
+          "week_number": 1,
+          "name": "Mobility Foundation",
+          "days": [
+            {
+              "id": "prog_golf_rotational_6wk_w1_d1",
+              "day_number": 1,
+              "day_of_week": "monday",
+              "name": "Thoracic Mobility",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": "Focus on thoracic rotation and hip mobility",
+              "exercises": [
+                {
+                  "id": "we_g001",
+                  "exercise_id": "SP_RT_THORACIC_OPEN_BOOK_MOB",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 10,
+                    "intensity": "gentle"
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_g002",
+                  "exercise_id": "SP_RT_THREAD_THE_NEEDLE_MOB",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 8
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_g003",
+                  "exercise_id": "HP_RT_9090_HIP_SWITCH_MOB",
+                  "round_number": 1,
+                  "order_in_round": 3,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 10
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_golf_rotational_6wk_w1_d2",
+              "day_number": 2,
+              "day_of_week": "wednesday",
+              "name": "Core & Rotation",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": [
+                {
+                  "id": "we_g004",
+                  "exercise_id": "CO_CO_DEAD_BUG_STR",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 10,
+                    "rest": 30
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_g005",
+                  "exercise_id": "GL_RT_CABLE_ROTATION_PWR",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 45
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_golf_rotational_6wk_w1_d3",
+              "day_number": 3,
+              "day_of_week": "friday",
+              "name": "Power Development",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": "Explosive movements - quality over quantity",
+              "exercises": [
+                {
+                  "id": "we_g006",
+                  "exercise_id": "GL_RT_CABLE_ROTATION_PWR",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 4,
+                    "reps": 8,
+                    "rest": 60,
+                    "intensity": "explosive"
+                  },
+                  "is_completed": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prog_lower_back_si_4wk",
+      "name": "Lower Back & SI Relief",
+      "description": "Targeted mobility and strengthening for lower back and SI joint issues. Gentle, progressive approach to reduce pain and improve function.",
+      "category": "lower_back_si",
+      "difficulty": "beginner",
+      "duration_weeks": 4,
+      "thumbnail_url": null,
+      "price": null,
+      "is_premium": false,
+      "is_published": true,
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z",
+      "weeks": [
+        {
+          "id": "prog_lower_back_si_4wk_w1",
+          "week_number": 1,
+          "name": "Gentle Mobilization",
+          "days": [
+            {
+              "id": "prog_lower_back_si_4wk_w1_d1",
+              "day_number": 1,
+              "day_of_week": null,
+              "name": "Day 1 - Spine Mobility",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": "Move slowly. Stop if pain increases.",
+              "exercises": [
+                {
+                  "id": "we_lb001",
+                  "exercise_id": "ex_001",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 1,
+                    "reps": 10,
+                    "intensity": "gentle",
+                    "stop_rules": "Stop if pain increases above baseline"
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_lb002",
+                  "exercise_id": "HP_RT_9090_HIP_SWITCH_MOB",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 6,
+                    "intensity": "gentle"
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_lower_back_si_4wk_w1_d2",
+              "day_number": 2,
+              "day_of_week": null,
+              "name": "Day 2 - Core Activation",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": [
+                {
+                  "id": "we_lb003",
+                  "exercise_id": "CO_CO_DEAD_BUG_STR",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 6,
+                    "rest": 30,
+                    "coaching_cues": ["Keep low back pressed to floor"]
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_lower_back_si_4wk_w1_d3",
+              "day_number": 3,
+              "day_of_week": null,
+              "name": "Day 3 - Hip Focus",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": [
+                {
+                  "id": "we_lb004",
+                  "exercise_id": "HP_AB_STANDING_HIPABAD_MOB",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 10,
+                    "rest": 30
+                  },
+                  "is_completed": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prog_plantar_fascia_4wk",
+      "name": "Plantar Fascia Relief",
+      "description": "Address plantar fasciitis and heel pain with targeted exercises for the foot, calf, and lower leg. Evidence-based approach for lasting relief.",
+      "category": "plantar_fascia",
+      "difficulty": "beginner",
+      "duration_weeks": 4,
+      "thumbnail_url": null,
+      "price": null,
+      "is_premium": false,
+      "is_published": true,
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z",
+      "weeks": [
+        {
+          "id": "prog_plantar_fascia_4wk_w1",
+          "week_number": 1,
+          "name": "Reduce Tension",
+          "days": [
+            {
+              "id": "prog_plantar_fascia_4wk_w1_d1",
+              "day_number": 1,
+              "day_of_week": null,
+              "name": "Daily Routine",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": "Perform morning and evening",
+              "exercises": [
+                {
+                  "id": "we_pf001",
+                  "exercise_id": "AN_MOB_SEATED_PLANTAR_FASCIA_MOB",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "duration": 120,
+                    "intensity": "pain-limited"
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_pf002",
+                  "exercise_id": "AN_CO_ECCENTRIC_CALF_DROPS_RHB",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 15,
+                    "rest": 60,
+                    "stop_rules": "Stop if pain exceeds 5/10"
+                  },
+                  "is_completed": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prog_shoulder_release_4wk",
+      "name": "Shoulder Release & Restore",
+      "description": "Comprehensive program for shoulder pain, stiffness, and rotator cuff issues. Combines mobility work, strengthening, and postural correction.",
+      "category": "shoulder_release",
+      "difficulty": "beginner",
+      "duration_weeks": 4,
+      "thumbnail_url": null,
+      "price": null,
+      "is_premium": false,
+      "is_published": true,
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z",
+      "weeks": [
+        {
+          "id": "prog_shoulder_release_4wk_w1",
+          "week_number": 1,
+          "name": "Mobility & Awareness",
+          "days": [
+            {
+              "id": "prog_shoulder_release_4wk_w1_d1",
+              "day_number": 1,
+              "day_of_week": null,
+              "name": "Thoracic & Shoulder Mobility",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": [
+                {
+                  "id": "we_sr001",
+                  "exercise_id": "SP_RT_THORACIC_OPEN_BOOK_MOB",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 8,
+                    "intensity": "gentle"
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_sr002",
+                  "exercise_id": "SP_RT_THREAD_THE_NEEDLE_MOB",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 8
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_sr003",
+                  "exercise_id": "SH_RT_RC_INTERNAL_ROTATION_RHB",
+                  "round_number": 1,
+                  "order_in_round": 3,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 15,
+                    "rest": 30,
+                    "load": "light band"
+                  },
+                  "is_completed": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "prog_ski_advanced_8wk",
+      "name": "Advanced Ski Conditioning",
+      "description": "8-week intensive program to prepare for ski season. Focus on leg strength, balance, rotational power, and endurance specific to skiing demands.",
+      "category": "ski",
+      "difficulty": "advanced",
+      "duration_weeks": 8,
+      "thumbnail_url": null,
+      "price": 59.99,
+      "is_premium": true,
+      "is_published": true,
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z",
+      "weeks": [
+        {
+          "id": "prog_ski_advanced_8wk_w1",
+          "week_number": 1,
+          "name": "Base Building",
+          "days": [
+            {
+              "id": "prog_ski_advanced_8wk_w1_d1",
+              "day_number": 1,
+              "day_of_week": "monday",
+              "name": "Lower Body Strength",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": "Focus on single-leg stability",
+              "exercises": [
+                {
+                  "id": "we_sk001",
+                  "exercise_id": "HP_LN_BULGARIAN_SPLIT_SQUAT_MOB",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 4,
+                    "reps": 10,
+                    "rest": 60
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_sk002",
+                  "exercise_id": "FB_SQ_GOBLET_SQUAT_STR",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 4,
+                    "reps": 12,
+                    "rest": 60
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_ski_advanced_8wk_w1_d2",
+              "day_number": 2,
+              "day_of_week": "wednesday",
+              "name": "Core & Rotational Power",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": null,
+              "exercises": [
+                {
+                  "id": "we_sk003",
+                  "exercise_id": "CO_CO_DEAD_BUG_STR",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 30
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_sk004",
+                  "exercise_id": "GL_RT_CABLE_ROTATION_PWR",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 3,
+                    "reps": 12,
+                    "rest": 45
+                  },
+                  "is_completed": false
+                }
+              ]
+            },
+            {
+              "id": "prog_ski_advanced_8wk_w1_d3",
+              "day_number": 3,
+              "day_of_week": "friday",
+              "name": "Mobility & Recovery",
+              "workout_id": null,
+              "is_rest_day": false,
+              "is_freeform_activity": false,
+              "notes": "Active recovery focus",
+              "exercises": [
+                {
+                  "id": "we_sk005",
+                  "exercise_id": "HP_RT_9090_HIP_SWITCH_MOB",
+                  "round_number": 1,
+                  "order_in_round": 1,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 10
+                  },
+                  "is_completed": false
+                },
+                {
+                  "id": "we_sk006",
+                  "exercise_id": "SP_RT_THORACIC_OPEN_BOOK_MOB",
+                  "round_number": 1,
+                  "order_in_round": 2,
+                  "prescription": {
+                    "sets": 2,
+                    "reps": 8
+                  },
+                  "is_completed": false
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

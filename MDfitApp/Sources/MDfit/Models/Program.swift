@@ -25,6 +25,10 @@ struct Program: Identifiable, Codable, Hashable {
         guard let price = price else { return "Included" }
         return "$\(price)"
     }
+
+    var isIncludedInMembership: Bool {
+        price == nil
+    }
 }
 
 // MARK: - Program Category

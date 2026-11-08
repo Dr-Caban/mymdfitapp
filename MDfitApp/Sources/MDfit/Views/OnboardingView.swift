@@ -21,13 +21,10 @@ struct OnboardingView: View {
 
                     // Logo
                     VStack(spacing: 16) {
-                        Image(systemName: "figure.walk")
-                            .font(.system(size: 72, weight: .light))
-                            .foregroundColor(.mdOrange)
-
-                        Text("MD FIT")
-                            .font(.system(size: 42, weight: .bold))
-                            .foregroundColor(.white)
+                        Image("MDFitLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 140, height: 140)
 
                         Text("Physical Rehabilitation & Fitness")
                             .font(.mdSubheadline)
@@ -41,7 +38,7 @@ struct OnboardingView: View {
                             .foregroundColor(.white)
                         Text("Long Enough")
                             .font(.mdTitle)
-                            .foregroundColor(.mdOrange)
+                            .foregroundColor(Color(red: 0.35, green: 0.78, blue: 0.98))
                     }
 
                     Spacer()
@@ -206,7 +203,9 @@ struct SignUpView: View {
     }
 }
 
-#Preview {
-    OnboardingView()
-        .environmentObject(AuthService())
+struct OnboardingView_Previews: PreviewProvider {
+    static var previews: some View {
+        OnboardingView()
+            .environmentObject(AuthService())
+    }
 }

@@ -1,0 +1,41 @@
+workflows:
+  ios-workflow:
+    name: iOS Build & TestFlight
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.mdfitsrq.MDfit
+      vars:
+        XCODE_PROJECT: "MDfit.xcodeproj"
+        XCODE_SCHEME: "MDfit"
+        BUNDLE_ID: "com.mdfitsrq.MDfit"
+      xcode: latest
+      cocoapods: default
+
+    scripts:
+      - name: Install XcodeGen
+        script: brew install xcodegen
+
+      - name: Generate Xcode project
+        script: xcodegen generate
+
+      - name: Set up code signing
+        script: xcode-project use-profiles
+
+      - name: Build archive
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true

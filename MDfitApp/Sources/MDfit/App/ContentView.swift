@@ -13,495 +13,276 @@ struct ContentView: View {
     }
 }
 
+// MARK: - Main Tab View (7 Tabs matching web exactly - custom tab bar)
+
 struct MainTabView: View {
     @Binding var selectedTab: Int
-    @State private var showSidebar = false
+    @State private var showMoreMenu = false
 
     var body: some View {
-        NavigationSplitView {
-            // Sidebar (iPad/Mac)
-            SidebarView(selectedTab: $selectedTab)
-        } detail: {
-            // Main content
-            TabContent(selectedTab: selectedTab)
+        ZStack(alignment: .bottom) {
+            // Content area
+            Group {
+                switch selectedTab {
+                case 0: HomeView()
+                case 1: WorkoutGeneratorView()
+                case 2: VideoLibraryView()
+                case 3: PainToolView()
+                case 4: ProgressView()
+                case 5: ProfileView()
+                case 6: Color.mdCream.onAppear { showMoreMenu = true }
+                default: HomeView()
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+
+            // Custom 7-tab bar
+            CustomTabBar(selectedTab: $selectedTab)
+        }
+        .ignoresSafeArea(.keyboard)
+        .sheet(isPresented: $showMoreMenu) {
+            MoreMenuSheet()
+        }
+        .onChange(of: selectedTab) { newValue in
+            if newValue == 6 {
+                showMoreMenu = true
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { selectedTab = 5 }
+            }
         }
     }
 }
 
-// MARK: - Sidebar Navigation
+// MARK: - Custom Tab Bar (7 tabs visible)
 
-struct SidebarView: View {
+struct CustomTabBar: View {
     @Binding var selectedTab: Int
 
-    var body: some View {
-        List(selection: $selectedTab) {
-            Section {
-                SidebarItem(icon: "house.fill", title: "Dashboard", tag: 0, selectedTab: $selectedTab)
-                SidebarItem(icon: "list.bullet.rectangle.fill", title: "My Programs", tag: 1, selectedTab: $selectedTab)
-                SidebarItem(icon: "slider.horizontal.3", title: "Workout Generator", tag: 2, selectedTab: $selectedTab)
-                SidebarItem(icon: "play.rectangle.fill", title: "Video Library", tag: 3, selectedTab: $selectedTab)
-                SidebarItem(icon: "figure.stand", title: "Pain Tool", tag: 4, selectedTab: $selectedTab)
-                SidebarItem(icon: "chart.line.uptrend.xyaxis", title: "Progress Tracking", tag: 5, selectedTab: $selectedTab)
-                SidebarItem(icon: "book.fill", title: "Resources", tag: 6, selectedTab: $selectedTab)
-                SidebarItem(icon: "person.fill", title: "My Profile", tag: 7, selectedTab: $selectedTab)
-            }
-        }
-        .listStyle(.sidebar)
-        .navigationTitle("MD Fit")
-        .background(Color.mdBlue)
-    }
-}
-
-struct SidebarItem: View {
-    let icon: String
-    let title: String
-    let tag: Int
-    @Binding var selectedTab: Int
-
-    var isSelected: Bool {
-        selectedTab == tag
-    }
+    private let tabs: [(icon: String, label: String)] = [
+        ("house.fill", "Home"),
+        ("slider.horizontal.3", "Workout"),
+        ("play.rectangle.fill", "Videos"),
+        ("figure.stand", "Pain"),
+        ("chart.bar.fill", "Progress"),
+        ("person.fill", "Profile"),
+        ("ellipsis", "More")
+    ]
 
     var body: some View {
-        Button {
-            selectedTab = tag
-        } label: {
-            HStack(spacing: 12) {
-                Image(systemName: icon)
-                    .font(.system(size: 18))
-                    .foregroundColor(isSelected ? .mdGold : .white.opacity(0.7))
-                    .frame(width: 24)
-
-                Text(title)
-                    .font(.system(size: 15, weight: isSelected ? .semibold : .regular))
-                    .foregroundColor(isSelected ? .white : .white.opacity(0.8))
-
-                Spacer()
-            }
-            .padding(.vertical, 10)
-            .padding(.horizontal, 12)
-            .background(isSelected ? Color.mdGold.opacity(0.2) : Color.clear)
-            .cornerRadius(8)
-        }
-        .buttonStyle(.plain)
-    }
-}
-
-// MARK: - Tab Content
-
-struct TabContent: View {
-    let selectedTab: Int
-
-    var body: some View {
-        switch selectedTab {
-        case 0:
-            DashboardView()
-        case 1:
-            ProgramsView()
-        case 2:
-            WorkoutGeneratorView()
-        case 3:
-            VideoLibraryView()
-        case 4:
-            PainToolView()
-        case 5:
-            ProgressTrackingView()
-        case 6:
-            ResourcesView()
-        case 7:
-            ProfileView()
-        default:
-            DashboardView()
-        }
-    }
-}
-
-// MARK: - Placeholder Views (to be built out)
-
-struct DashboardView: View {
-    var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(spacing: 24) {
-                    // Welcome
-                    welcomeSection
-
-                    // Next workout
-                    nextWorkoutCard
-
-                    // Quick actions
-                    quickActions
-
-                    // Upcoming events
-                    upcomingEventsSection
-
-                    // Recent progress
-                    progressSnapshot
-                }
-                .padding()
-            }
-            .background(Color(.systemGroupedBackground))
-            .navigationTitle("Dashboard")
-        }
-    }
-
-    private var welcomeSection: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("Good morning")
-                    .font(.mdSubheadline)
-                    .foregroundColor(.mdGray)
-                Text("John")
-                    .font(.mdTitle)
-            }
-            Spacer()
-            Circle()
-                .fill(Color.mdBlue.opacity(0.2))
-                .frame(width: 50, height: 50)
-                .overlay(
-                    Text("JD")
-                        .font(.mdHeadline)
-                        .foregroundColor(.mdBlue)
-                )
-        }
-    }
-
-    private var nextWorkoutCard: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Next Workout")
-                    .font(.mdHeadline)
-                Spacer()
-                Text("Today")
-                    .font(.mdCaption)
-                    .foregroundColor(.mdGold)
-            }
-
-            HStack(spacing: 16) {
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color.mdBlue.opacity(0.1))
-                    .frame(width: 60, height: 60)
-                    .overlay(
-                        Image(systemName: "figure.mixed.cardio")
-                            .font(.system(size: 28))
-                            .foregroundColor(.mdBlue)
-                    )
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("Full Body Power")
-                        .font(.mdBody)
-                    Text("60 min • Intermediate")
-                        .font(.mdCaption)
-                        .foregroundColor(.mdGray)
-                }
-
-                Spacer()
-
+        HStack(spacing: 0) {
+            ForEach(0..<tabs.count, id: \.self) { index in
                 Button {
-                    // Start workout
+                    selectedTab = index
                 } label: {
-                    Text("Start")
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .background(Color.mdBlue)
-                        .cornerRadius(8)
-                }
-            }
-        }
-        .mdCard()
-    }
-
-    private var quickActions: some View {
-        HStack(spacing: 12) {
-            QuickAction(icon: "plus.circle.fill", label: "Generate", color: .mdBlue) {}
-            QuickAction(icon: "figure.stand", label: "Pain Tool", color: .mdGold) {}
-            QuickAction(icon: "play.rectangle.fill", label: "Library", color: .mdBlue) {}
-            QuickAction(icon: "calendar", label: "Schedule", color: .mdGold) {}
-        }
-    }
-
-    private var upcomingEventsSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Upcoming Events")
-                    .font(.mdHeadline)
-                Spacer()
-                Text("View All")
-                    .font(.mdCaption)
-                    .foregroundColor(.mdBlue)
-            }
-
-            EventRow(event: Event.sample)
-        }
-        .mdCard()
-    }
-
-    private var progressSnapshot: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("This Week")
-                .font(.mdHeadline)
-
-            HStack(spacing: 16) {
-                StatBox(value: "4", label: "Workouts", color: .mdBlue)
-                StatBox(value: "180", label: "Minutes", color: .mdGold)
-                StatBox(value: "12", label: "Exercises", color: .mdBlue)
-            }
-        }
-        .mdCard()
-    }
-}
-
-struct QuickAction: View {
-    let icon: String
-    let label: String
-    let color: Color
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            VStack(spacing: 8) {
-                Image(systemName: icon)
-                    .font(.system(size: 24))
-                    .foregroundColor(color)
-                Text(label)
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.primary)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 16)
-            .background(Color(.systemBackground))
-            .cornerRadius(12)
-            .shadow(color: Color.black.opacity(0.03), radius: 4, x: 0, y: 2)
-        }
-    }
-}
-
-struct StatBox: View {
-    let value: String
-    let label: String
-    let color: Color
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text(value)
-                .font(.system(size: 24, weight: .bold))
-                .foregroundColor(color)
-            Text(label)
-                .font(.system(size: 11))
-                .foregroundColor(.mdGray)
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
-struct EventRow: View {
-    let event: Event
-
-    var body: some View {
-        HStack(spacing: 12) {
-            VStack {
-                Text(event.startDate, format: .dateTime.month(.abbreviated))
-                    .font(.system(size: 10, weight: .bold))
-                    .foregroundColor(.mdGold)
-                Text(event.startDate, format: .dateTime.day())
-                    .font(.system(size: 20, weight: .bold))
-            }
-            .frame(width: 48, height: 48)
-            .background(Color.mdGold.opacity(0.1))
-            .cornerRadius(8)
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(event.title)
-                    .font(.mdBody)
-                Text(event.formattedTimeRange)
-                    .font(.mdCaption)
-                    .foregroundColor(.mdGray)
-            }
-
-            Spacer()
-
-            if let spots = event.spotsRemaining {
-                Text("\(spots) spots")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundColor(.mdBlue)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(Color.mdBlue.opacity(0.1))
-                    .cornerRadius(4)
-            }
-        }
-    }
-}
-
-// MARK: - More Placeholder Views
-
-struct ProgramsView: View {
-    var body: some View {
-        NavigationStack {
-            List {
-                Section("Enrolled") {
-                    Text("8-Week Running: Beginner")
-                    Text("Lower Back & SI Relief")
-                }
-                Section("Available") {
-                    ForEach(Program.samples) { program in
-                        ProgramRow(program: program)
+                    VStack(spacing: 4) {
+                        Image(systemName: tabs[index].icon)
+                            .font(.system(size: 20))
+                        Text(tabs[index].label)
+                            .font(.system(size: 10, weight: selectedTab == index ? .semibold : .medium))
                     }
+                    .foregroundColor(selectedTab == index ? .mdGold : .white.opacity(0.5))
+                    .frame(maxWidth: .infinity)
+                    .padding(.top, 10)
+                    .padding(.bottom, 6)
                 }
             }
-            .navigationTitle("My Programs")
         }
+        .background(Color(hex: "0f2942"))
+        .padding(.bottom, UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.windows.first?.safeAreaInsets.bottom ?? 0 > 0 ? 20 : 0)
+        .background(Color(hex: "0f2942"))
     }
 }
 
-struct ProgramRow: View {
-    let program: Program
+// MARK: - More Menu Sheet (Exact match)
 
-    var body: some View {
-        HStack(spacing: 12) {
-            RoundedRectangle(cornerRadius: 8)
-                .fill(Color.mdBlue.opacity(0.1))
-                .frame(width: 60, height: 60)
-                .overlay(
-                    Image(systemName: program.category.icon)
-                        .font(.system(size: 24))
-                        .foregroundColor(.mdBlue)
-                )
-
-            VStack(alignment: .leading, spacing: 4) {
-                Text(program.name)
-                    .font(.mdBody)
-                Text("\(program.durationWeeks) weeks • \(program.difficulty.displayName)")
-                    .font(.mdCaption)
-                    .foregroundColor(.mdGray)
-            }
-
-            Spacer()
-
-            Text(program.formattedPrice)
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundColor(.mdGold)
-        }
-    }
-}
-
-struct VideoLibraryView: View {
-    @State private var searchText = ""
+struct MoreMenuSheet: View {
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationStack {
-            List {
-                Section("Categories") {
-                    ForEach(ExerciseCategory.allCases, id: \.self) { category in
-                        HStack {
-                            Image(systemName: category.icon)
-                                .foregroundColor(.mdBlue)
-                            Text(category.displayName)
-                            Spacer()
-                            Text("24")
-                                .foregroundColor(.mdGray)
+            ZStack {
+                Color.mdCream.ignoresSafeArea()
+                VStack(spacing: 0) {
+                    // Header
+                    HStack {
+                        Text("More").font(.system(size: 22, weight: .semibold)).foregroundColor(.mdHeading)
+                        Spacer()
+                        Button { dismiss() } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 16, weight: .medium))
+                                .foregroundColor(.mdMuted)
+                                .frame(width: 36, height: 36)
+                                .background(Circle().stroke(Color.mdLine, lineWidth: 1.5))
                         }
                     }
+                    .padding(.horizontal, 20).padding(.top, 24).padding(.bottom, 20)
+
+                    ScrollView(showsIndicators: false) {
+                        VStack(spacing: 8) {
+                            // Quick access group
+                            VStack(spacing: 0) {
+                                MoreMenuRow(icon: "figure.stand", title: "Pain Tool")
+                                MoreMenuRow(icon: "play.rectangle.fill", title: "Video Library")
+                                MoreMenuRow(icon: "calendar.badge.plus", title: "Book an appointment", showDivider: false)
+                            }
+                            .background(Color.mdGoldSoft.opacity(0.5))
+                            .cornerRadius(12)
+
+                            // Main sections
+                            VStack(spacing: 0) {
+                                NavigationLink(destination: PremadeProgramsView()) {
+                                    MoreMenuRow(icon: "checkmark.square.fill", title: "Programs")
+                                }
+                                NavigationLink(destination: LecturesView()) {
+                                    MoreMenuRow(icon: "graduationcap.fill", title: "Lectures & Live Q&A")
+                                }
+                                NavigationLink(destination: LeaderboardView()) {
+                                    MoreMenuRow(icon: "trophy.fill", title: "Leaderboard")
+                                }
+                                NavigationLink(destination: MembershipView()) {
+                                    MoreMenuRow(icon: "crown.fill", title: "Membership & 1-on-1")
+                                }
+                                NavigationLink(destination: MessengerView()) {
+                                    MoreMenuRow(icon: "bubble.left.fill", title: "Message Dr. Jared")
+                                }
+                                NavigationLink(destination: HealthTipsView()) {
+                                    MoreMenuRow(icon: "lightbulb.fill", title: "Health Tips", showDivider: false)
+                                }
+                            }
+                            .background(Color.mdGoldSoft.opacity(0.5))
+                            .cornerRadius(12)
+                        }
+                        .padding(.horizontal, 20)
+                    }
                 }
             }
-            .navigationTitle("Video Library")
-            .searchable(text: $searchText)
         }
     }
 }
 
-struct PainToolView: View {
-    @State private var selectedView: BodyMapSelection.BodyView = .front
+struct MoreMenuRow: View {
+    let icon: String
+    let title: String
+    var showDivider: Bool = true
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                // Body view toggle
-                Picker("View", selection: $selectedView) {
-                    Text("Front").tag(BodyMapSelection.BodyView.front)
-                    Text("Back").tag(BodyMapSelection.BodyView.back)
-                }
-                .pickerStyle(.segmented)
-                .padding()
-
-                // Body diagram placeholder
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20)
-                        .fill(Color.mdBlue.opacity(0.05))
-
-                    Image(systemName: "figure.stand")
-                        .font(.system(size: 200))
-                        .foregroundColor(.mdBlue.opacity(0.3))
-
-                    Text("Tap where you feel pain")
-                        .font(.mdSubheadline)
-                        .foregroundColor(.mdGray)
-                        .offset(y: 140)
-                }
-                .padding()
-
+        VStack(spacing: 0) {
+            HStack(spacing: 14) {
+                Image(systemName: icon)
+                    .font(.system(size: 18))
+                    .foregroundColor(Color(hex: "1a6b9f"))
+                    .frame(width: 24)
+                Text(title)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundColor(.mdHeading)
                 Spacer()
             }
-            .navigationTitle("Pain Tool")
+            .padding(.horizontal, 16).padding(.vertical, 14)
+            if showDivider {
+                Divider().padding(.leading, 54)
+            }
         }
     }
 }
 
-struct ProgressTrackingView: View {
+// MARK: - Remaining Views (Programs, Lectures, Leaderboard, etc.)
+
+struct PremadeProgramsView: View {
+    @State private var selectedCategory: String = "All"
+    private let categories = ["All", "Rehab Protocols", "Sport Performance", "Mobility", "Strength"]
+
     var body: some View {
-        NavigationStack {
-            List {
-                Section("This Week") {
-                    HStack {
-                        Text("Workouts Completed")
-                        Spacer()
-                        Text("4 / 5")
-                            .foregroundColor(.mdBlue)
+        ZStack(alignment: .top) {
+            Color.mdCream.ignoresSafeArea()
+            ScrollView(showsIndicators: false) {
+                VStack(spacing: 0) {
+                    programsHero
+                    VStack(spacing: 16) {
+                        categoryFilters
+                        VStack(spacing: 20) {
+                            ProgramCardLarge(category: "REHAB PROTOCOLS", title: "Low Back Reset", duration: "6-WEEK PROGRAM", description: "Calm the back down, then build it up.", details: "6 weeks · 0 days/week · Beginner")
+                            ProgramCardLarge(category: "REHAB PROTOCOLS", title: "Shoulder Rebuild", duration: "6-WEEK PROGRAM", description: "Rotator cuff strength and range.", details: "6 weeks · 0 days/week · Beginner")
+                        }
+                        Spacer(minLength: 100)
                     }
-                    HStack {
-                        Text("Total Minutes")
-                        Spacer()
-                        Text("180")
-                            .foregroundColor(.mdBlue)
-                    }
+                    .padding(.horizontal, 16).padding(.top, 16)
                 }
-                Section("Streak") {
-                    HStack {
-                        Image(systemName: "flame.fill")
-                            .foregroundColor(.mdGold)
-                        Text("12 Day Streak")
-                        Spacer()
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private var programsHero: some View {
+        ZStack { Color.mdInk; RadialGradient(colors: [Color.mdInk3.opacity(0.5), .clear], center: .topTrailing, startRadius: 0, endRadius: 300) }
+        .frame(height: 130)
+        .overlay(
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(spacing: 0) { Text("Premade ").font(.mdDisplay(28, weight: .bold)).foregroundColor(.white); Text("Programs").font(.mdDisplay(28, weight: .bold)).italic().foregroundColor(.mdGold) }
+                Text("MULTI-WEEK PLANS FROM DR. JARED.").font(.system(size: 10, weight: .semibold)).foregroundColor(.white.opacity(0.7)).tracking(0.8)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading).padding(.horizontal, 20).padding(.bottom, 16), alignment: .bottomLeading
+        )
+    }
+
+    private var categoryFilters: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 8) {
+                ForEach(categories, id: \.self) { category in
+                    Button { selectedCategory = category } label: {
+                        Text(category).font(.system(size: 14, weight: .medium)).foregroundColor(selectedCategory == category ? .white : .mdInk).padding(.horizontal, 16).padding(.vertical, 10).background(selectedCategory == category ? Color.mdInk : Color.mdPaper).cornerRadius(999).overlay(RoundedRectangle(cornerRadius: 999).stroke(Color.mdLine, lineWidth: selectedCategory == category ? 0 : 1))
                     }
                 }
             }
-            .navigationTitle("Progress")
         }
     }
 }
 
-struct ResourcesView: View {
+struct ProgramCardLarge: View {
+    let category: String; let title: String; let duration: String; let description: String; let details: String
     var body: some View {
-        NavigationStack {
-            List {
-                Section("Educational") {
-                    Text("Understanding Pain")
-                    Text("Movement Fundamentals")
-                    Text("Recovery & Rest")
-                }
-                Section("Guides") {
-                    Text("Getting Started")
-                    Text("Equipment Guide")
-                    Text("Nutrition Basics")
+        VStack(alignment: .leading, spacing: 0) {
+            ZStack {
+                Color.mdInk
+                VStack(spacing: 4) {
+                    Text("MD FIT · \(category)").font(.system(size: 10, weight: .bold)).foregroundColor(.white.opacity(0.7)).tracking(1)
+                    Text(title).font(.mdDisplay(24, weight: .bold)).foregroundColor(.white)
+                    Text(duration).font(.system(size: 11, weight: .bold)).foregroundColor(.mdGold)
                 }
             }
-            .navigationTitle("Resources")
+            .frame(height: 140).cornerRadius(14, corners: [.topLeft, .topRight])
+            VStack(alignment: .leading, spacing: 6) { Text(description).font(.system(size: 14)).foregroundColor(.mdText); Text(details).font(.system(size: 12)).foregroundColor(.mdMuted) }
+            .padding(16).background(Color.mdPaper).cornerRadius(14, corners: [.bottomLeft, .bottomRight])
         }
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.mdLine, lineWidth: 1))
     }
 }
 
-#Preview {
-    ContentView()
-        .environmentObject(AuthService())
+// LecturesView, LeaderboardView, MembershipView, MessengerView, and HealthTipsView are defined in MoreMenuView.swift
+
+// MARK: - Corner Radius Extension
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+// MARK: - Preview
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+            .environmentObject(AuthService.shared)
+    }
 }

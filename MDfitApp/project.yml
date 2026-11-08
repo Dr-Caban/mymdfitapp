@@ -1,0 +1,47 @@
+name: MDfit
+options:
+  bundleIdPrefix: com.mdfitsrq
+  deploymentTarget:
+    iOS: "16.0"
+  xcodeVersion: "15.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+
+targets:
+  MDfit:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: Sources/MDfit
+        name: MDfit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mdfitsrq.MDfit
+        INFOPLIST_GENERATION_MODE: GeneratedFile
+        INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true
+        INFOPLIST_KEY_UILaunchScreen_Generation: true
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait"
+        INFOPLIST_KEY_UISupportedInterfaceOrientations~ipad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
+        INFOPLIST_KEY_CFBundleDisplayName: "MD Fit"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+
+  MDfitTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+        name: MDfitTests
+    dependencies:
+      - target: MDfit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.mdfitsrq.MDfitTests

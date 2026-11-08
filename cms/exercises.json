@@ -1,0 +1,542 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-10-27T00:00:00Z",
+  "description": "MD Fit exercise library - Dr. Jared can edit this file to manage exercises",
+  "exercises": [
+    {
+      "id": "ex_001",
+      "name": "Cat Cow",
+      "video_asset_id": "LBCK_MOB_CAT_COW",
+      "body_region": "lower_back",
+      "muscle_emphasis": ["erector spinae", "abdominals", "multifidus"],
+      "category": "mobility",
+      "equipment": ["yoga_mat"],
+      "level": "beginner",
+      "cues": [
+        "Start on hands and knees, wrists under shoulders, knees under hips",
+        "Inhale: drop belly, lift chest and tailbone (Cow)",
+        "Exhale: round spine, tuck chin and tailbone (Cat)",
+        "Move slowly with breath, 5-10 repetitions"
+      ],
+      "tempo": "slow",
+      "default_prescription": {
+        "sets": 1,
+        "reps": 10,
+        "rest": 0,
+        "intensity": "gentle",
+        "coaching_cues": ["Move with your breath", "Keep movement pain-free"]
+      },
+      "modifications": [
+        "Place blanket under knees if sensitive",
+        "Reduce range of motion if uncomfortable"
+      ],
+      "exclusions": ["acute back injury", "severe disc herniation"],
+      "safety_notes": "Move within pain-free range. Stop if you experience sharp pain.",
+      "approval_status": "approved",
+      "tags": ["spine", "warmup", "mobility", "beginner-friendly", "no-equipment"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "AN_CO_ECCENTRIC_CALF_DROPS_RHB",
+      "name": "Eccentric Calf Drops",
+      "video_asset_id": "AN_CO_ECCENTRIC_CALF_DROPS_RHB",
+      "body_region": "calves",
+      "muscle_emphasis": ["gastrocnemius", "soleus", "Achilles tendon"],
+      "category": "rehab",
+      "equipment": ["none"],
+      "level": "beginner",
+      "cues": [
+        "Stand on edge of step with heels off",
+        "Rise up on toes using both legs",
+        "Shift weight to affected leg",
+        "Slowly lower heel below step level over 3-5 seconds",
+        "Use both legs to return to start position"
+      ],
+      "tempo": "3-1-0",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 15,
+        "rep_range": "10-15",
+        "rest": 60,
+        "intensity": "pain-limited",
+        "coaching_cues": ["Control the descent", "Stop if pain exceeds 5/10"],
+        "stop_rules": "Stop if pain exceeds 5/10 or sharp pain occurs"
+      },
+      "modifications": [
+        "Use wall or rail for balance",
+        "Start with both legs if single leg is too difficult",
+        "Perform on flat ground first"
+      ],
+      "exclusions": ["acute Achilles rupture", "recent calf surgery"],
+      "safety_notes": "This exercise may cause mild discomfort (3-4/10) which is acceptable. Stop if sharp pain occurs.",
+      "approval_status": "approved",
+      "tags": ["calf", "eccentric", "rehab", "plantar fasciitis", "Achilles", "tendinopathy"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "SP_RT_THREAD_THE_NEEDLE_MOB",
+      "name": "Thread the Needle",
+      "video_asset_id": "SP_RT_THREAD_THE_NEEDLE_MOB",
+      "body_region": "upper_back",
+      "muscle_emphasis": ["thoracic spine", "rhomboids", "rotator cuff"],
+      "category": "mobility",
+      "equipment": ["yoga_mat"],
+      "level": "beginner",
+      "cues": [
+        "Start on hands and knees",
+        "Reach right arm under body, rotating torso",
+        "Let shoulder and head rest on ground",
+        "Hold 3-5 breaths, then rotate up reaching to ceiling",
+        "Repeat on other side"
+      ],
+      "tempo": "slow",
+      "default_prescription": {
+        "sets": 2,
+        "reps": 8,
+        "rest": 0,
+        "intensity": "moderate",
+        "coaching_cues": ["Breathe into the stretch", "Move smoothly between positions"]
+      },
+      "modifications": [
+        "Place block or pillow under head",
+        "Reduce rotation range if uncomfortable"
+      ],
+      "exclusions": ["shoulder impingement (acute)", "recent shoulder surgery"],
+      "safety_notes": null,
+      "approval_status": "approved",
+      "tags": ["thoracic", "rotation", "mobility", "upper back", "desk worker"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "HP_RT_9090_HIP_SWITCH_MOB",
+      "name": "90/90 Hip Switch",
+      "video_asset_id": "HP_RT_9090_HIP_SWITCH_MOB",
+      "body_region": "hips",
+      "muscle_emphasis": ["hip rotators", "glutes", "piriformis"],
+      "category": "mobility",
+      "equipment": ["yoga_mat"],
+      "level": "beginner",
+      "cues": [
+        "Sit with legs in 90/90 position - both knees at 90 degrees",
+        "Front shin parallel to torso, back shin perpendicular",
+        "Lift both knees and switch sides smoothly",
+        "Keep spine tall throughout",
+        "Control the movement, don't rush"
+      ],
+      "tempo": "controlled",
+      "default_prescription": {
+        "sets": 2,
+        "reps": 10,
+        "rest": 0,
+        "intensity": "moderate"
+      },
+      "modifications": [
+        "Sit on yoga block for elevation",
+        "Use hands behind you for support",
+        "Reduce knee angle if hip mobility limited"
+      ],
+      "exclusions": ["hip replacement precautions", "acute hip injury"],
+      "safety_notes": "If you feel pinching in the front of hip, adjust position or reduce range.",
+      "approval_status": "approved",
+      "tags": ["hip", "rotation", "mobility", "internal rotation", "external rotation"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "NK_MOB_SCALENE_RELEASE_RHB",
+      "name": "Scalene Release",
+      "video_asset_id": "NK_MOB_SCALENE_RELEASE_RHB",
+      "body_region": "neck",
+      "muscle_emphasis": ["scalenes", "SCM", "upper trapezius"],
+      "category": "rehab",
+      "equipment": ["none"],
+      "level": "beginner",
+      "cues": [
+        "Sit or stand tall with neutral spine",
+        "Tilt head away from tight side",
+        "Apply gentle overpressure with hand",
+        "Hold position and breathe",
+        "Release slowly after 30 seconds"
+      ],
+      "tempo": "hold 30s",
+      "default_prescription": {
+        "sets": 1,
+        "reps": 3,
+        "duration": 30,
+        "rest": 0,
+        "intensity": "gentle",
+        "coaching_cues": ["Gentle pressure only", "Stop if dizzy or numb"],
+        "stop_rules": "Stop immediately if you experience dizziness, numbness, or tingling"
+      },
+      "modifications": [
+        "Perform seated for stability",
+        "Use less pressure if sensitive"
+      ],
+      "exclusions": ["cervical instability", "vertebral artery insufficiency", "recent neck injury"],
+      "safety_notes": "Gentle pressure only. Stop immediately if you experience dizziness, numbness, or tingling.",
+      "approval_status": "approved",
+      "tags": ["neck", "scalene", "release", "rehab", "tension headache", "desk posture"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "HP_AB_STANDING_HIPABAD_MOB",
+      "name": "Standing Hip Abduction",
+      "video_asset_id": "HP_AB_STANDING_HIPABAD_MOB",
+      "body_region": "hips",
+      "muscle_emphasis": ["glute medius", "TFL", "hip abductors"],
+      "category": "strengthening",
+      "equipment": ["none"],
+      "level": "beginner",
+      "cues": [
+        "Stand tall, hold wall or chair if needed",
+        "Keep standing leg slightly bent",
+        "Lift working leg directly out to side",
+        "Keep toes pointing forward, not up",
+        "Control the return, don't swing"
+      ],
+      "tempo": "2-0-2",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 12,
+        "rest": 30,
+        "intensity": "moderate"
+      },
+      "modifications": [
+        "Add resistance band for progression",
+        "Use cable machine for resistance",
+        "Reduce range if hip clicking occurs"
+      ],
+      "exclusions": ["acute hip bursitis", "hip labral tear (active)"],
+      "safety_notes": null,
+      "approval_status": "approved",
+      "tags": ["hip", "glute", "abduction", "standing", "balance"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "SP_RT_THORACIC_OPEN_BOOK_MOB",
+      "name": "Thoracic Open Book",
+      "video_asset_id": "SP_RT_THORACIC_OPEN_BOOK_MOB",
+      "body_region": "upper_back",
+      "muscle_emphasis": ["thoracic spine", "obliques", "intercostals"],
+      "category": "mobility",
+      "equipment": ["yoga_mat"],
+      "level": "beginner",
+      "cues": [
+        "Lie on side with knees bent 90 degrees",
+        "Stack knees and keep them together",
+        "Reach top arm forward, then rotate opening to ceiling",
+        "Follow hand with eyes",
+        "Let chest and shoulder relax toward floor"
+      ],
+      "tempo": "slow",
+      "default_prescription": {
+        "sets": 2,
+        "reps": 8,
+        "rest": 0,
+        "duration": null,
+        "intensity": "gentle"
+      },
+      "modifications": [
+        "Place pillow between knees",
+        "Put pillow under bottom arm for comfort"
+      ],
+      "exclusions": [],
+      "safety_notes": null,
+      "approval_status": "approved",
+      "tags": ["thoracic", "rotation", "mobility", "breathing", "chest opener"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "CO_CO_DEAD_BUG_STR",
+      "name": "Dead Bug",
+      "video_asset_id": "CO_CO_DEAD_BUG_STR",
+      "body_region": "core",
+      "muscle_emphasis": ["transverse abdominis", "rectus abdominis", "obliques"],
+      "category": "strengthening",
+      "equipment": ["yoga_mat"],
+      "level": "beginner",
+      "cues": [
+        "Lie on back with arms reaching to ceiling",
+        "Lift legs to tabletop position (90 degree knees)",
+        "Press low back into floor throughout",
+        "Extend opposite arm and leg slowly",
+        "Return to start and alternate sides"
+      ],
+      "tempo": "2-1-2",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 10,
+        "rest": 45,
+        "intensity": "moderate",
+        "coaching_cues": ["Keep low back pressed to floor", "Move slowly and controlled"]
+      },
+      "modifications": [
+        "Keep knees bent more to reduce difficulty",
+        "Move only legs first, then add arms",
+        "Reduce range of motion"
+      ],
+      "exclusions": ["diastasis recti (severe)", "acute low back pain"],
+      "safety_notes": "If low back arches off floor, reduce range of motion or regress the exercise.",
+      "approval_status": "approved",
+      "tags": ["core", "stability", "anti-extension", "beginner-friendly"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "HP_LN_BULGARIAN_SPLIT_SQUAT_MOB",
+      "name": "Bulgarian Split Squat",
+      "video_asset_id": "HP_LN_BULGARIAN_SPLIT_SQUAT_MOB",
+      "body_region": "quadriceps",
+      "muscle_emphasis": ["quadriceps", "glutes", "hip flexors"],
+      "category": "strengthening",
+      "equipment": ["bench"],
+      "level": "intermediate",
+      "cues": [
+        "Stand about 2 feet in front of bench",
+        "Place back foot on bench, laces down",
+        "Keep torso upright, core engaged",
+        "Lower until back knee nearly touches floor",
+        "Drive through front heel to stand"
+      ],
+      "tempo": "3-1-1",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 10,
+        "rest": 60,
+        "intensity": "moderate",
+        "load": "bodyweight"
+      },
+      "modifications": [
+        "Use lower surface (step) for back foot",
+        "Hold wall or chair for balance",
+        "Add dumbbells for progression"
+      ],
+      "exclusions": ["acute knee injury", "hip replacement precautions"],
+      "safety_notes": "Front knee should track over toes. Stop if sharp knee pain occurs.",
+      "approval_status": "approved",
+      "tags": ["legs", "single-leg", "strength", "hip flexor stretch", "functional"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "SH_RT_RC_INTERNAL_ROTATION_RHB",
+      "name": "Rotator Cuff Internal Rotation",
+      "video_asset_id": "SH_RT_RC_INTERNAL_ROTATION_RHB",
+      "body_region": "shoulders",
+      "muscle_emphasis": ["subscapularis", "rotator cuff", "internal rotators"],
+      "category": "rehab",
+      "equipment": ["resistance_band"],
+      "level": "beginner",
+      "cues": [
+        "Stand with band anchored at elbow height",
+        "Keep elbow bent 90 degrees at side",
+        "Rotate forearm inward against resistance",
+        "Keep elbow pinned to side throughout",
+        "Control the return movement"
+      ],
+      "tempo": "2-1-2",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 15,
+        "rest": 45,
+        "intensity": "light",
+        "load": "light band"
+      },
+      "modifications": [
+        "Use towel roll between arm and body",
+        "Perform lying down if standing is difficult",
+        "Use lighter resistance band"
+      ],
+      "exclusions": ["acute rotator cuff tear", "recent shoulder surgery"],
+      "safety_notes": "Use light resistance. This should not cause pain.",
+      "approval_status": "approved",
+      "tags": ["shoulder", "rotator cuff", "rehab", "internal rotation", "prehab"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "HP_HN_ROMANIAN_DEADLIFT_STR",
+      "name": "Romanian Deadlift",
+      "video_asset_id": "HP_HN_ROMANIAN_DEADLIFT_STR",
+      "body_region": "hamstrings",
+      "muscle_emphasis": ["hamstrings", "glutes", "erector spinae"],
+      "category": "strengthening",
+      "equipment": ["dumbbells"],
+      "level": "intermediate",
+      "cues": [
+        "Stand with feet hip-width apart, slight knee bend",
+        "Hold weights in front of thighs",
+        "Hinge at hips, pushing butt back",
+        "Lower weights along legs until stretch in hamstrings",
+        "Drive hips forward to return to standing"
+      ],
+      "tempo": "3-1-2",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 10,
+        "rest": 60,
+        "intensity": "moderate",
+        "load": "moderate"
+      },
+      "modifications": [
+        "Perform single-leg version for stability challenge",
+        "Use kettlebell between legs",
+        "Perform without weight first to learn pattern"
+      ],
+      "exclusions": ["acute hamstring strain", "disc herniation (flexion intolerant)"],
+      "safety_notes": "Keep back flat/neutral. Do not round spine during movement.",
+      "approval_status": "approved",
+      "tags": ["hamstring", "hinge", "posterior chain", "strength", "functional"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "FB_CW_JUMPING_JACKS_WU",
+      "name": "Jumping Jacks",
+      "video_asset_id": "FB_CW_JUMPING_JACKS_WU",
+      "body_region": "full_body",
+      "muscle_emphasis": ["cardiovascular", "full body"],
+      "category": "warm_up",
+      "equipment": ["none"],
+      "level": "beginner",
+      "cues": [
+        "Start standing with feet together, arms at sides",
+        "Jump feet apart while raising arms overhead",
+        "Jump feet back together while lowering arms",
+        "Land softly on balls of feet",
+        "Maintain steady rhythm"
+      ],
+      "tempo": "fast",
+      "default_prescription": {
+        "sets": 1,
+        "duration": 60,
+        "rest": 0,
+        "intensity": "moderate"
+      },
+      "modifications": [
+        "Step out instead of jumping for low impact",
+        "Half jacks - arms only to shoulder height",
+        "Reduce speed if needed"
+      ],
+      "exclusions": ["joint pain with impact"],
+      "safety_notes": null,
+      "approval_status": "approved",
+      "tags": ["warmup", "cardio", "full body", "no equipment"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "GL_RT_CABLE_ROTATION_PWR",
+      "name": "Cable Rotation",
+      "video_asset_id": "GL_RT_CABLE_ROTATION_PWR",
+      "body_region": "core",
+      "muscle_emphasis": ["obliques", "rotational core", "hip rotators"],
+      "category": "sport",
+      "equipment": ["cables_machine"],
+      "level": "intermediate",
+      "cues": [
+        "Stand perpendicular to cable machine",
+        "Hold handle with both hands at chest height",
+        "Rotate away from machine using core, not arms",
+        "Keep arms extended but not locked",
+        "Control the return, resist the pull"
+      ],
+      "tempo": "2-1-2",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 12,
+        "rest": 45,
+        "intensity": "moderate"
+      },
+      "modifications": [
+        "Use resistance band if no cable available",
+        "Perform half kneeling for more stability",
+        "Add anti-rotation hold at end range"
+      ],
+      "exclusions": ["acute low back pain"],
+      "safety_notes": "Do not rotate through pain. Keep core braced throughout.",
+      "approval_status": "approved",
+      "tags": ["golf", "rotation", "core", "power", "sport-specific"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "AN_MOB_SEATED_PLANTAR_FASCIA_MOB",
+      "name": "Seated Plantar Fascia Release",
+      "video_asset_id": "AN_MOB_SEATED_PLANTAR_FASCIA_MOB",
+      "body_region": "feet",
+      "muscle_emphasis": ["plantar fascia", "intrinsic foot muscles"],
+      "category": "rehab",
+      "equipment": ["none"],
+      "level": "beginner",
+      "cues": [
+        "Sit with one ankle crossed over opposite knee",
+        "Pull toes back toward shin with hand",
+        "Use thumb to massage arch of foot",
+        "Apply firm but tolerable pressure",
+        "Work from heel to ball of foot"
+      ],
+      "tempo": "slow",
+      "default_prescription": {
+        "sets": 1,
+        "reps": 1,
+        "duration": 120,
+        "rest": 0,
+        "intensity": "pain-limited",
+        "coaching_cues": ["Spend extra time on tender spots", "Pressure should be firm but not sharp"]
+      },
+      "modifications": [
+        "Use tennis ball or frozen water bottle to roll",
+        "Perform standing on ball for more pressure"
+      ],
+      "exclusions": ["plantar fascia rupture"],
+      "safety_notes": "Mild discomfort is expected. Stop if sharp pain occurs.",
+      "approval_status": "approved",
+      "tags": ["plantar fasciitis", "foot", "release", "rehab", "self-massage"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    },
+    {
+      "id": "FB_SQ_GOBLET_SQUAT_STR",
+      "name": "Goblet Squat",
+      "video_asset_id": "FB_SQ_GOBLET_SQUAT_STR",
+      "body_region": "full_body",
+      "muscle_emphasis": ["quadriceps", "glutes", "core", "upper back"],
+      "category": "strengthening",
+      "equipment": ["kettlebell", "dumbbells"],
+      "level": "beginner",
+      "cues": [
+        "Hold weight at chest, elbows pointing down",
+        "Stand with feet slightly wider than hip width",
+        "Sit back and down, keeping chest tall",
+        "Lower until thighs parallel or below",
+        "Drive through whole foot to stand"
+      ],
+      "tempo": "3-1-2",
+      "default_prescription": {
+        "sets": 3,
+        "reps": 12,
+        "rest": 60,
+        "intensity": "moderate",
+        "load": "light to moderate"
+      },
+      "modifications": [
+        "Hold lighter weight or no weight",
+        "Box squat to target depth",
+        "Elevate heels for ankle mobility limitation"
+      ],
+      "exclusions": ["acute knee injury"],
+      "safety_notes": "Knees should track over toes. Keep core braced throughout.",
+      "approval_status": "approved",
+      "tags": ["squat", "legs", "full body", "beginner-friendly", "functional"],
+      "created_at": "2026-10-01T00:00:00Z",
+      "updated_at": "2026-10-27T00:00:00Z"
+    }
+  ]
+}

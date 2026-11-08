@@ -1,0 +1,12 @@
+
+# Large files - do not commit
+*.zip
+*.mp4
+*.mov
+*.avi
+assets/videos/
+MDfit_videos.zip
+DerivedData/
+*.xcarchive
+*.ipa
+.build/

@@ -1,0 +1,358 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-10-27T00:00:00Z",
+  "description": "MD Fit Pain Tool mappings - Dr. Jared can edit this file to manage body region to exercise mappings",
+  "global_disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+  "mappings": [
+    {
+      "id": "pain_neck_scalene",
+      "name": "Scalene/Neck Tension",
+      "body_region": "neck",
+      "referred_areas": ["shoulders", "chest", "arms"],
+      "common_causes": [
+        "Forward head posture",
+        "Desk work / computer use",
+        "Stress / tension holding",
+        "Breathing dysfunction",
+        "Sleeping position",
+        "Phone use (text neck)"
+      ],
+      "red_flags": [
+        "Numbness or tingling down arm that persists",
+        "Difficulty swallowing or speaking",
+        "Severe headache with neck stiffness",
+        "Loss of balance or coordination",
+        "Fever with neck pain"
+      ],
+      "suggested_exercise_ids": [
+        "NK_MOB_SCALENE_RELEASE_RHB",
+        "SP_RT_THREAD_THE_NEEDLE_MOB"
+      ],
+      "educational_content": "The scalene muscles run along the side of your neck and can refer pain to the chest, shoulder, and arm when tight. This pattern is often mistaken for heart or shoulder problems. The scalenes can also compress nerves and blood vessels going to the arm (thoracic outlet). Gentle release work, postural improvements, and breathing exercises typically help.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_shoulder_infraspinatus",
+      "name": "Rotator Cuff (Infraspinatus)",
+      "body_region": "shoulders",
+      "referred_areas": ["arms", "neck"],
+      "common_causes": [
+        "Overhead activities",
+        "Side sleeping on affected shoulder",
+        "Rotator cuff weakness or imbalance",
+        "Poor posture (rounded shoulders)",
+        "Repetitive arm movements",
+        "Throwing or racquet sports"
+      ],
+      "red_flags": [
+        "Complete inability to raise arm",
+        "Significant weakness that appears suddenly",
+        "Visible deformity after injury",
+        "Severe swelling or bruising"
+      ],
+      "suggested_exercise_ids": [
+        "SH_RT_RC_INTERNAL_ROTATION_RHB",
+        "SP_RT_THREAD_THE_NEEDLE_MOB",
+        "SP_RT_THORACIC_OPEN_BOOK_MOB"
+      ],
+      "educational_content": "The infraspinatus is a rotator cuff muscle on the back of your shoulder blade. When tight or irritated, it can refer pain deep into the front of the shoulder and down the outside of the arm. External rotation exercises and gentle stretching help restore balance. Improving thoracic mobility often reduces shoulder stress.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_upper_back_thoracic",
+      "name": "Upper Back / Thoracic Stiffness",
+      "body_region": "upper_back",
+      "referred_areas": ["chest", "shoulders", "arms"],
+      "common_causes": [
+        "Prolonged sitting",
+        "Desk work posture",
+        "Shallow breathing",
+        "Rounded shoulders",
+        "Heavy backpack or bag use",
+        "Lack of thoracic rotation"
+      ],
+      "red_flags": [
+        "Severe chest pain (rule out cardiac)",
+        "Difficulty breathing deeply",
+        "Pain with breathing that worsens",
+        "Unexplained weight loss"
+      ],
+      "suggested_exercise_ids": [
+        "SP_RT_THREAD_THE_NEEDLE_MOB",
+        "SP_RT_THORACIC_OPEN_BOOK_MOB",
+        "ex_001"
+      ],
+      "educational_content": "The thoracic spine should rotate and extend freely. When stiff, it can cause local pain and also refer discomfort around the ribs and into the chest. Upper back stiffness often contributes to neck and shoulder problems. Rotation exercises and extension work typically provide relief.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "mild",
+      "is_active": true
+    },
+    {
+      "id": "pain_lower_back_ql",
+      "name": "Lower Back (QL) Pain",
+      "body_region": "lower_back",
+      "referred_areas": ["hips", "glutes"],
+      "common_causes": [
+        "Prolonged sitting",
+        "Side bending activities",
+        "Carrying bags on one side",
+        "Hip imbalance or weakness",
+        "Sleeping position",
+        "Standing for long periods"
+      ],
+      "red_flags": [
+        "Loss of bladder or bowel control",
+        "Progressive leg weakness",
+        "Numbness in groin area (saddle anesthesia)",
+        "Severe pain that doesn't improve with any position",
+        "Fever with back pain"
+      ],
+      "suggested_exercise_ids": [
+        "ex_001",
+        "HP_RT_9090_HIP_SWITCH_MOB",
+        "CO_CO_DEAD_BUG_STR"
+      ],
+      "educational_content": "The quadratus lumborum (QL) connects your pelvis to your spine and ribs. When tight, it can cause deep low back and hip pain, often worse on one side. QL issues often respond well to hip mobility work, gentle spinal movement, and core stabilization.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_lower_back_psoas",
+      "name": "Hip Flexor / Psoas Pain",
+      "body_region": "lower_back",
+      "referred_areas": ["hips", "quadriceps"],
+      "common_causes": [
+        "Prolonged sitting",
+        "Hip flexor tightness",
+        "Running or sprinting",
+        "Core weakness",
+        "Sleeping in fetal position"
+      ],
+      "red_flags": [
+        "Severe pain with hip flexion",
+        "Fever with back pain",
+        "Unexplained weight loss",
+        "Night pain that wakes you"
+      ],
+      "suggested_exercise_ids": [
+        "HP_LN_BULGARIAN_SPLIT_SQUAT_MOB",
+        "HP_RT_9090_HIP_SWITCH_MOB",
+        "CO_CO_DEAD_BUG_STR"
+      ],
+      "educational_content": "The psoas connects your spine to your leg and is the primary hip flexor. When tight from sitting, it can pull on the lower back and cause pain. The psoas also affects breathing and nervous system function. Hip flexor stretching and core work typically help.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_hip_glute_minimus",
+      "name": "Hip / Lateral Hip Pain",
+      "body_region": "glutes",
+      "referred_areas": ["hips", "hamstrings", "calves"],
+      "common_causes": [
+        "Prolonged sitting",
+        "Sleeping on side",
+        "Walking or running asymmetry",
+        "Hip weakness (especially glute medius)",
+        "IT band tightness"
+      ],
+      "red_flags": [
+        "Groin pain with fever",
+        "Inability to bear weight",
+        "Hip giving way or feeling unstable",
+        "Severe groin pain after fall"
+      ],
+      "suggested_exercise_ids": [
+        "HP_AB_STANDING_HIPABAD_MOB",
+        "HP_RT_9090_HIP_SWITCH_MOB"
+      ],
+      "educational_content": "The glute minimus can cause pain that mimics sciatica, referring down the outside of the leg to the ankle. This 'pseudo-sciatica' pattern is common and often responds well to hip strengthening (especially glute medius) and mobility work.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_hip_groin",
+      "name": "Groin / Inner Hip Pain",
+      "body_region": "hips",
+      "referred_areas": ["quadriceps", "lower_back"],
+      "common_causes": [
+        "Hip adductor overuse",
+        "Sports with cutting movements",
+        "Hip flexor tightness",
+        "Wide stance activities",
+        "Running"
+      ],
+      "red_flags": [
+        "Groin lump or swelling",
+        "Severe pain with hip movement",
+        "Fever with groin pain",
+        "Unable to lift leg"
+      ],
+      "suggested_exercise_ids": [
+        "HP_RT_9090_HIP_SWITCH_MOB",
+        "HP_LN_BULGARIAN_SPLIT_SQUAT_MOB"
+      ],
+      "educational_content": "Groin pain can originate from multiple structures including the hip flexors (psoas, iliacus), adductors, or the hip joint itself. The psoas can refer pain to the front of the hip and inner thigh. Hip rotation exercises and hip flexor lengthening often provide relief.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_hamstring",
+      "name": "Hamstring / Back of Thigh Pain",
+      "body_region": "hamstrings",
+      "referred_areas": ["glutes", "knees"],
+      "common_causes": [
+        "Sitting posture compressing hamstrings",
+        "Running without adequate warm-up",
+        "Glute weakness (hamstring compensation)",
+        "Sciatic nerve irritation",
+        "Lower back issues"
+      ],
+      "red_flags": [
+        "Sudden severe pain with pop sound",
+        "Significant bruising",
+        "Numbness or tingling down leg",
+        "Complete inability to bend knee"
+      ],
+      "suggested_exercise_ids": [
+        "HP_HN_ROMANIAN_DEADLIFT_STR",
+        "HP_RT_9090_HIP_SWITCH_MOB",
+        "ex_001"
+      ],
+      "educational_content": "Hamstring pain can originate from the muscle itself or be referred from the glutes, lower back, or sciatic nerve. Often, strengthening the glutes reduces hamstring strain by improving load distribution. Romanian deadlifts help build hamstring capacity when pain allows.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_calf_soleus",
+      "name": "Calf / Heel Pain",
+      "body_region": "calves",
+      "referred_areas": ["ankles", "feet"],
+      "common_causes": [
+        "Running or walking increases",
+        "High heel wearing",
+        "Calf weakness",
+        "Achilles tendon issues",
+        "Plantar fasciitis (connected)",
+        "Poor footwear"
+      ],
+      "red_flags": [
+        "Sudden calf pain with 'pop' sensation",
+        "Calf swelling with warmth (DVT risk)",
+        "Complete inability to walk on toes",
+        "Red, hot, swollen calf"
+      ],
+      "suggested_exercise_ids": [
+        "AN_CO_ECCENTRIC_CALF_DROPS_RHB",
+        "AN_MOB_SEATED_PLANTAR_FASCIA_MOB"
+      ],
+      "educational_content": "The soleus can refer pain to the heel and bottom of the foot, often mimicking plantar fasciitis. The calf muscles and plantar fascia work together in a kinetic chain. Eccentric calf exercises are evidence-based treatment for both calf and Achilles issues, and often help plantar fascia symptoms as well.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_plantar_fascia",
+      "name": "Plantar Fasciitis / Heel Pain",
+      "body_region": "feet",
+      "referred_areas": ["calves", "ankles"],
+      "common_causes": [
+        "Increased walking or running",
+        "Standing for long periods",
+        "Tight calf muscles",
+        "Poor footwear support",
+        "Weight gain",
+        "Flat feet or high arches"
+      ],
+      "red_flags": [
+        "Severe pain that prevents walking",
+        "Numbness in foot",
+        "Visible deformity",
+        "Foot infection signs (redness, warmth, swelling)"
+      ],
+      "suggested_exercise_ids": [
+        "AN_MOB_SEATED_PLANTAR_FASCIA_MOB",
+        "AN_CO_ECCENTRIC_CALF_DROPS_RHB"
+      ],
+      "educational_content": "Plantar fasciitis causes heel pain, typically worst with first steps in the morning. The plantar fascia is connected to the calf muscles through the Achilles tendon, forming a continuous fascial line. Both calf stretching/strengthening and direct plantar fascia work are typically needed for full recovery. Most cases resolve with consistent exercise over 6-12 weeks.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    },
+    {
+      "id": "pain_core_oblique",
+      "name": "Side / Oblique Pain",
+      "body_region": "core",
+      "referred_areas": ["hips", "lower_back"],
+      "common_causes": [
+        "Rotational sports (golf, tennis, baseball)",
+        "Core weakness",
+        "Poor lifting mechanics",
+        "Coughing or sneezing forcefully",
+        "Sudden twisting movements"
+      ],
+      "red_flags": [
+        "Severe abdominal pain",
+        "Abdominal rigidity",
+        "Blood in stool or urine",
+        "Fever with abdominal pain"
+      ],
+      "suggested_exercise_ids": [
+        "CO_CO_DEAD_BUG_STR",
+        "GL_RT_CABLE_ROTATION_PWR"
+      ],
+      "educational_content": "The external and internal obliques help rotate and side-bend your trunk. They can refer pain to the lower abdomen and groin area. Core stabilization exercises help restore function, followed by gradual return to rotational activities.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "mild",
+      "is_active": true
+    },
+    {
+      "id": "pain_chest_muscular",
+      "name": "Chest Wall / Pec Pain",
+      "body_region": "chest",
+      "referred_areas": ["shoulders", "arms"],
+      "common_causes": [
+        "Bench press or pushing exercises",
+        "Rounded posture",
+        "Desk work",
+        "Driving position",
+        "Pec minor tension"
+      ],
+      "red_flags": [
+        "Chest pain with shortness of breath",
+        "Pain with exertion (seek emergency evaluation)",
+        "Pain radiating to jaw or left arm",
+        "Lightheadedness with chest pain",
+        "Chest pain with sweating"
+      ],
+      "suggested_exercise_ids": [
+        "SP_RT_THORACIC_OPEN_BOOK_MOB",
+        "SP_RT_THREAD_THE_NEEDLE_MOB"
+      ],
+      "educational_content": "The pectoralis muscles can refer pain to the front of the shoulder and down the arm. IMPORTANT: Always rule out cardiac causes for chest pain before assuming muscular origin. If you experience chest pain with exertion, shortness of breath, or other concerning symptoms, seek medical evaluation first. Muscular chest wall pain typically improves with thoracic mobility work and postural correction.",
+      "disclaimer": "This tool is for educational purposes only and does not constitute medical advice or diagnosis. If you are experiencing severe pain, numbness, weakness, or other concerning symptoms, please consult a healthcare professional immediately.",
+      "thumbnail_url": null,
+      "severity": "moderate",
+      "is_active": true
+    }
+  ]
+}
