@@ -72,6 +72,38 @@ enum BridgeScript {
           .catch(function () {});
       }, true);
 
+      // Celebrations the site shows (the milestone pop-up and the celebrate toast) -> sound + haptic.
+      // The pop-up's kicker says what it is: "New gem!" or "Milestone unlocked".
+      var lastSound = 0;
+      var sound = function (name) {
+        var now = Date.now();
+        if (now - lastSound < 400) return;
+        lastSound = now;
+        post({ action: "sound", name: name });
+        post({ action: "haptic", style: "success" });
+      };
+      var watchCelebrations = function () {
+        var ms = document.getElementById("ms"), toast = document.getElementById("toast");
+        if (ms) {
+          new MutationObserver(function () {
+            if (ms.hidden || !ms.classList.contains("play")) return;
+            var k = ((document.getElementById("ms-kicker") || {}).textContent || "").toLowerCase();
+            sound(k.indexOf("gem") >= 0 ? "gem" : "badge");
+          }).observe(ms, { attributes: true, attributeFilter: ["class", "hidden"] });
+        }
+        if (toast) {
+          new MutationObserver(function () {
+            if (toast.hidden || !toast.classList.contains("celebrate")) return;
+            var t = (toast.textContent || "").toLowerCase();
+            if (t.indexOf("new gem") >= 0) sound("gem");
+            else if (t.indexOf("badge unlocked") >= 0) sound("badge");
+            else if (t.indexOf("daily goal") >= 0) sound("goal");
+          }).observe(toast, { attributes: true, attributeFilter: ["class", "hidden"] });
+        }
+      };
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", watchCelebrations);
+      else watchCelebrations();
+
       // XP earned -> success haptic
       var lastXp = null;
       document.addEventListener("mdfit:rewards", function (e) {

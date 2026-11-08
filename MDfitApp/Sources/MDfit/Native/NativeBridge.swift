@@ -18,6 +18,9 @@ final class NativeBridge: NSObject, WKScriptMessageHandler {
         case "haptic":
             Haptics.play(body["style"] as? String ?? "light")
 
+        case "sound":
+            Sounds.play(body["name"] as? String ?? "")
+
         case "share":
             let text = [body["title"] as? String, body["text"] as? String]
                 .compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: "\n")
