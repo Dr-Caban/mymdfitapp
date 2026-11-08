@@ -73,6 +73,8 @@ workflows:
           print(f"private key ok: {kind}, {len(body)} base64 chars")
           PY
           chmod 600 "$KEY_FILE"
+          # Prove the key parses before handing it to Apple's tool (which only says "Not a valid certificate private key")
+          openssl pkey -in "$KEY_FILE" -noout -check 2>&1 | sed 's/^/openssl: /' || { echo "The key's contents are corrupted. Re-save CERTIFICATE_PRIVATE_KEY from: base64 -i ~/Desktop/mdfit_cert_key | tr -d '\\n' | pbcopy"; exit 1; }
           app-store-connect fetch-signing-files "$BUNDLE_ID" --type IOS_APP_STORE --create --certificate-key "@file:$KEY_FILE"
       - name: Add the certificate to the keychain
         script: |
