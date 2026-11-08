@@ -61,8 +61,8 @@ workflows:
           KEY_FILE="$CM_BUILD_DIR/cert_private_key.pem"
           python3 - "$KEY_FILE" <<'PY'
           import os, re, sys, base64
-          raw = os.environ.get("CERTIFICATE_PRIVATE_KEY", "").strip()
-          if not raw: sys.exit("CERTIFICATE_PRIVATE_KEY is empty: add it in Codemagic → app settings → Environment variables (group 'signing').")
+          raw = (os.environ.get("CERTIFICATE_PRIVATE_KEY") or os.environ.get("CM_CERTIFICATE_PRIVATE_KEY") or "").strip()
+          if not raw: sys.exit("CERTIFICATE_PRIVATE_KEY (or CM_CERTIFICATE_PRIVATE_KEY) is empty: add it in Codemagic → app settings → Environment variables (group 'signing').")
           if "-----BEGIN" not in raw:            # stored as base64 of the whole file
               raw = base64.b64decode(raw).decode()
           m = re.search(r"-----BEGIN ([A-Z ]*PRIVATE KEY)-----(.*?)-----END \1-----", raw, re.S)
