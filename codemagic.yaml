@@ -85,7 +85,17 @@ workflows:
           xcode-project use-profiles --project "$XCODE_PROJECT"
       - name: Build the .ipa
         script: |
+          set +e
           xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+          status=$?
+          if [ $status -ne 0 ]; then
+            # The filtered output above only shows ❌/⚠️ lines. A compiler crash or an unusual error only appears in the
+            # raw xcodebuild log, so surface the lines that matter from there.
+            echo "=================== raw xcodebuild diagnostics ==================="
+            grep -hnE "error:|Stack dump|Assertion failed|fatal error|Segmentation|Illegal instruction|Program arguments|\*\*\* |note: (Emplaced|Compiling)" /tmp/xcodebuild_logs/*.log 2>/dev/null | grep -vE "warning:|note: Emplaced" | head -120
+            echo "=================== end diagnostics ==================="
+          fi
+          exit $status
     artifacts:
       - build/ios/ipa/*.ipa
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
