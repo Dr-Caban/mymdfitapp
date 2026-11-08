@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="generate" android:enabled="true" android:icon="@mipmap/ic_launcher" android:shortcutShortLabel="@string/shortcut_generate">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="com.mdfitsrq.mdfit" android:targetClass="com.mdfitsrq.mdfit.MainActivity">
+            <extra android:name="route" android:value="generate" />
+        </intent>
+    </shortcut>
+    <shortcut android:shortcutId="pain" android:enabled="true" android:icon="@mipmap/ic_launcher" android:shortcutShortLabel="@string/shortcut_pain">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="com.mdfitsrq.mdfit" android:targetClass="com.mdfitsrq.mdfit.MainActivity">
+            <extra android:name="route" android:value="pain" />
+        </intent>
+    </shortcut>
+    <shortcut android:shortcutId="progress" android:enabled="true" android:icon="@mipmap/ic_launcher" android:shortcutShortLabel="@string/shortcut_progress">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="com.mdfitsrq.mdfit" android:targetClass="com.mdfitsrq.mdfit.MainActivity">
+            <extra android:name="route" android:value="progress" />
+        </intent>
+    </shortcut>
+    <shortcut android:shortcutId="messages" android:enabled="true" android:icon="@mipmap/ic_launcher" android:shortcutShortLabel="@string/shortcut_messages">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="com.mdfitsrq.mdfit" android:targetClass="com.mdfitsrq.mdfit.MainActivity">
+            <extra android:name="route" android:value="messages/dr" />
+        </intent>
+    </shortcut>
+</shortcuts>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/mdfit_navy">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <WebView
+            android:id="@+id/web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/mdfit_navy" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/offline"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:background="@color/mdfit_navy"
+        android:visibility="gone">
+        <ImageView android:layout_width="120dp" android:layout_height="120dp" android:src="@drawable/splash_logo" android:contentDescription="@string/app_name" />
+        <TextView android:id="@+id/offline_title" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="24dp"
+            android:text="@string/offline_title" android:textColor="@color/white" android:textSize="22sp" android:textStyle="bold" />
+        <TextView android:id="@+id/offline_body" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"
+            android:text="@string/offline_body" android:textColor="#B3FFFFFF" android:textSize="16sp" android:gravity="center" />
+        <Button android:id="@+id/retry" android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="28dp"
+            android:text="@string/retry" android:textAllCaps="false" android:textStyle="bold" android:textColor="@color/mdfit_navy" android:backgroundTint="@color/mdfit_gold" />
+        <Button android:id="@+id/call" style="?android:attr/borderlessButtonStyle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp"
+            android:text="@string/call_clinic" android:textAllCaps="false" android:textColor="@color/mdfit_gold" />
+    </LinearLayout>
+</FrameLayout>

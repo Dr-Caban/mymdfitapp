@@ -111,3 +111,47 @@ workflows:
         notify:
           success: true
           failure: true
+
+  # ---------------------------------------------------------------------------------------------------------------
+  # Android (android/): the same app in Kotlin. Builds a Play Store bundle (.aab) and a test .apk.
+  # One-time setup:
+  #   1. Codemagic → Teams → Code signing identities → Android keystores → "Generate" (or upload), reference name
+  #      mdfit_keystore. Keep a copy of the keystore + passwords: Play updates must be signed with the same key.
+  #   2. Push notifications: Firebase console → add Android app com.mdfitsrq.mdfit → download google-services.json
+  #      → commit it as android/app/google-services.json (it is not secret).
+  #   3. Publishing to Play: Google Play Console → create the app (package com.mdfitsrq.mdfit), upload the first .aab
+  #      by hand once, then add a service-account JSON in Codemagic (Teams → Integrations → Google Play) and
+  #      uncomment the google_play block below.
+  android:
+    name: Android → Play (internal testing)
+    max_build_duration: 45
+    instance_type: linux_x2
+    environment:
+      java: 17
+      android_signing:
+        - mdfit_keystore              # skipped with a warning until the keystore exists (debug-signed APK then)
+      vars:
+        PACKAGE_NAME: "com.mdfitsrq.mdfit"
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: main
+          include: true
+          source: true
+      cancel_previous_builds: true
+    scripts:
+      - name: Build bundle and APK
+        script: |
+          set -e
+          cd android
+          export BUILD_NUMBER="${PROJECT_BUILD_NUMBER:-1}"
+          gradle --no-daemon :app:bundleRelease :app:assembleRelease
+    artifacts:
+      - android/app/build/outputs/bundle/release/*.aab
+      - android/app/build/outputs/apk/release/*.apk
+      - android/app/build/outputs/mapping/release/mapping.txt
+    # publishing:
+    #   google_play:
+    #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+    #     track: internal

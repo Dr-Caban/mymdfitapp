@@ -7,9 +7,9 @@ enum Sounds {
     private static var players: [String: AVAudioPlayer] = [:]
     private static var sessionReady = false
 
-    /// `name` is one of the files in Resources/Sounds: gem, badge, goal.
+    /// `name` is one of the files in Resources/Sounds: gem, badge, goal, xp, notify.
     static func play(_ name: String) {
-        guard ["gem", "badge", "goal"].contains(name) else { return }
+        guard ["gem", "badge", "goal", "xp", "notify"].contains(name) else { return }
         if !sessionReady {
             try? AVAudioSession.sharedInstance().setCategory(.ambient, mode: .default)
             try? AVAudioSession.sharedInstance().setActive(true)

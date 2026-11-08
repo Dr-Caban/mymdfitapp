@@ -1,23 +1,29 @@
-/// JavaScript injected into every mymdfit.com page in the app. It doesn't change the site's behaviour; it
+/// JavaScript injected into every mymdfit.com page in the app (the Android app uses the same script: android/app/src/main/assets/bridge.js
+/// is generated from this file by scripts/sync-bridge.sh). It doesn't change the site's behaviour; it
 /// listens to what the member app already does (taps, the events account.js dispatches) and asks the native
 /// side for the iOS version of it.
 enum BridgeScript {
     static let source = #"""
     (function () {
       if (window.MDFitNative) return;
+      // iOS: WKScriptMessageHandler "mdfit". Android: the same script, with a JavascriptInterface "mdfitAndroid".
       var post = function (msg) {
-        try { window.webkit.messageHandlers.mdfit.postMessage(msg); } catch (e) {}
+        try {
+          if (window.mdfitAndroid) window.mdfitAndroid.postMessage(JSON.stringify(msg));
+          else window.webkit.messageHandlers.mdfit.postMessage(msg);
+        } catch (e) {}
       };
+      var isAndroid = !!window.mdfitAndroid;
 
       // Pages can check window.MDFitNative / html.in-ios-app to tailor themselves to the app
       window.MDFitNative = {
         isApp: true,
-        platform: "ios",
+        platform: isAndroid ? "android" : "ios",
         haptic: function (style) { post({ action: "haptic", style: style || "light" }); },
         share: function (d) { d = d || {}; post({ action: "share", title: d.title || "", text: d.text || "", url: d.url || "" }); },
         open: function (url) { post({ action: "open", url: String(url || "") }); }
       };
-      document.documentElement.classList.add("in-ios-app");
+      document.documentElement.classList.add("in-ios-app", isAndroid ? "in-android-app" : "in-ios");
 
       // navigator.vibrate (gem level-ups, milestones) -> Taptic Engine
       try {
@@ -86,7 +92,7 @@ enum BridgeScript {
           if (sessionStorage.getItem(key)) return;
           fetch(api + (isAdmin ? "/api/admin/devices" : "/api/me/devices"), {
             method: "POST", headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-            body: JSON.stringify({ token: deviceToken, platform: "ios" })
+            body: JSON.stringify({ token: deviceToken, platform: isAndroid ? "android" : "ios" })
           }).then(function (r) { if (r.ok) sessionStorage.setItem(key, "1"); }).catch(function () {});
         } catch (e) {}
       };
@@ -144,7 +150,7 @@ enum BridgeScript {
       document.addEventListener("mdfit:rewards", function (e) {
         var r = (e && e.detail) || {};
         if (typeof r.xp === "number") {
-          if (lastXp !== null && r.xp > lastXp) post({ action: "haptic", style: "success" });
+          if (lastXp !== null && r.xp > lastXp) { post({ action: "haptic", style: "success" }); setTimeout(function () { if (Date.now() - lastSound > 400) sound("xp"); }, 250); }
           lastXp = r.xp;
         }
       });
