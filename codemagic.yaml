@@ -249,6 +249,25 @@ workflows:
       - android/app/build/outputs/bundle/release/*.aab
       - android/app/build/outputs/apk/release/*.apk
       - android/app/build/outputs/mapping/release/mapping.txt
+    # ---- Send each build to your Android testers (Firebase App Distribution) ----
+    # Testers get an email with an install link. No Play Store review, no waiting. To switch it on:
+    #   1. Google Cloud console → IAM → find firebase-adminsdk-fbsvc@mdfit-6c618.iam.gserviceaccount.com
+    #      → Edit → Add another role → "Firebase App Distribution Admin" → Save.
+    #   2. Firebase console → Run → App Distribution → Testers & Groups → create a group named: testers
+    #      → add the tester email addresses.
+    #   3. Codemagic → the app → Environment variables: FIREBASE_SERVICE_ACCOUNT = the whole
+    #      firebase-adminsdk JSON file, group "signing", Secure ticked.
+    # Then delete the leading "#" from the six lines below.
+    # publishing:
+    #   firebase:
+    #     firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
+    #     android:
+    #       app_id: 1:853081441902:android:3d62da0772dc70c7c1087f   # from google-services.json
+    #       groups:
+    #         - testers
+    #       artifact_type: apk      # testers install an APK; the .aab is for Play
+    #
+    # ---- Later: publish straight to Google Play (needs the app to exist there first) ----
     # publishing:
     #   google_play:
     #     credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
