@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "853081441902",
+    "project_id": "mdfit-6c618",
+    "storage_bucket": "mdfit-6c618.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:853081441902:android:3d62da0772dc70c7c1087f",
+        "android_client_info": {
+          "package_name": "com.mdfitsrq.mdfit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIWGxFZUo8XxI3eQYj-5eCUVaDXl6XtqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
