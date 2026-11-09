@@ -187,8 +187,16 @@ workflows:
   # ---------------------------------------------------------------------------------------------------------------
   # Android (android/): the same app in Kotlin. Builds a Play Store bundle (.aab) and a test .apk.
   # One-time setup:
-  #   1. Codemagic → Teams → Code signing identities → Android keystores → "Generate" (or upload), reference name
-  #      mdfit_keystore. Keep a copy of the keystore + passwords: Play updates must be signed with the same key.
+  #   1. Signing: Codemagic → the app → Environment variables, group "signing" (the same group the iOS workflow
+  #      already uses), Secure ticked on every one:
+  #        MDFIT_KEYSTORE           base64 of upload-keystore.jks   (base64 -w0 upload-keystore.jks)
+  #        MDFIT_KEYSTORE_PASSWORD  the keystore password
+  #        MDFIT_KEY_ALIAS          the key alias (mdfit)
+  #        MDFIT_KEY_PASSWORD       the key password
+  #      The keystore deliberately does NOT use `android_signing:` / team code signing identities: those resolve
+  #      only inside the account that owns the app, so a keystore uploaded to the wrong team fails the build with
+  #      "No keystores with reference 'mdfit_keystore' were found". App environment variables always resolve.
+  #      Keep a copy of the keystore + passwords: Play updates must be signed with the same key, forever.
   #   2. Push notifications: Firebase console → add Android app com.mdfitsrq.mdfit → download google-services.json
   #      → commit it as android/app/google-services.json (it is not secret).
   #   3. Publishing to Play: Google Play Console → create the app (package com.mdfitsrq.mdfit), upload the first .aab
@@ -200,8 +208,8 @@ workflows:
     instance_type: linux_x2
     environment:
       java: 17
-      android_signing:
-        - mdfit_keystore              # skipped with a warning until the keystore exists (debug-signed APK then)
+      groups:
+        - signing                     # holds the MDFIT_KEYSTORE* variables above (shared with the iOS workflow)
       vars:
         PACKAGE_NAME: "com.mdfitsrq.mdfit"
     triggering:
@@ -216,6 +224,20 @@ workflows:
       - name: Build bundle and APK
         script: |
           set -e
+          # Release signing: rebuild the keystore from the secure variables, then export the CM_* names that
+          # android/app/build.gradle.kts already reads. Without them the APK is debug-signed and Play rejects it.
+          if [ -n "${MDFIT_KEYSTORE:-}" ]; then
+            export CM_KEYSTORE_PATH="$HOME/mdfit_keystore.jks"
+            printf '%s' "$MDFIT_KEYSTORE" | tr -d '[:space:]' | base64 --decode > "$CM_KEYSTORE_PATH"
+            export CM_KEYSTORE_PASSWORD="$MDFIT_KEYSTORE_PASSWORD"
+            export CM_KEY_ALIAS="${MDFIT_KEY_ALIAS:-mdfit}"
+            export CM_KEY_PASSWORD="${MDFIT_KEY_PASSWORD:-$MDFIT_KEYSTORE_PASSWORD}"
+            keytool -list -keystore "$CM_KEYSTORE_PATH" -storepass "$CM_KEYSTORE_PASSWORD" -alias "$CM_KEY_ALIAS" >/dev/null \
+              || { echo "The keystore did not open. Check MDFIT_KEYSTORE (base64 of the .jks), MDFIT_KEYSTORE_PASSWORD and MDFIT_KEY_ALIAS."; exit 1; }
+            echo "Release signing ready: alias $CM_KEY_ALIAS."
+          else
+            echo "MDFIT_KEYSTORE is not set, so this build is debug-signed and Play will not accept it."
+          fi
           cd android
           export BUILD_NUMBER="${PROJECT_BUILD_NUMBER:-1}"
           gradle --no-daemon :app:bundleRelease :app:assembleRelease
