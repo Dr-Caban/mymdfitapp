@@ -1,1 +1,1 @@
-fitness,pain,mobility,exercise,workout,rehab,physical therapy,movement,stretching,strength
+pain,mobility,rehab,exercise,workout,stretching,strength,posture,golf,running,physical therapy
