@@ -37,3 +37,11 @@ Account deletion: members can delete their account and all associated data from
 Profile -> Account -> Delete account. [VERIFY THIS EXISTS BEFORE SUBMITTING]
 
 Health data: the app does not read or write Apple Health data in this version.
+
+On the app name: "Movement Medicine" is a brand name describing a movement-
+education philosophy, not a claim of medical practice. MD Fit delivers exercise
+physiology, corrective exercise, soft tissue therapy and performance training.
+It does not diagnose, treat or prescribe, no practitioner-patient relationship
+is created, and the Pain Tool carries a disclaimer and red-flag guidance on
+every result. The app is filed under Health & Fitness, and the health
+questionnaire is answered as fitness and wellness, not medical.
